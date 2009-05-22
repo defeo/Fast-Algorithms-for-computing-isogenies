@@ -244,7 +244,7 @@
 	\frob_p : E(\clot{\K}) &\rightarrow E^{(p)}(\clot{\K})\\
 	                   (X,Y) &\mapsto (X^p,Y^p)
       \end{align*}
-      where $\;\;E^{(p)} \;:\; Y^2 + = X^3 + a^pX + b^p\qquad$ if $p =
+      where $\;\;E^{(p)} \;:\; Y^2 = X^3 + a^pX + b^p\qquad$ if $p =
       \car(\K)$,\\
       $\;\deg \frob_p = p$, $\;\ker\frob_p = \{\0\}$.
  
@@ -470,8 +470,8 @@
       \end{column}
       \begin{column}{0.7\textwidth}
         \[\xymatrix{
-          E(\clot{\F}_q) \supset G \ar[rr]^\I &&
-          G' \subset E'(\clot{\F}_q)
+          E(\clot{\K}) \supset G \ar[rr]^\I &&
+          G' \subset E'(\clot{\K})
         }\]
         \[\xymatrix{
           \ar@{=>}[d]  \\
@@ -864,8 +864,9 @@
         \item Find special $(\gamma_0,\ldots,\gamma_{k-1})$ that
           define a tower s.t. $\LK_i = \F_p[x_i]$, where
           $\;x_i^p-x_i-\gamma_{i-1}=0$.
-        \item Use univariate representation to perform fast
-          arithmetics (FFT multiplication, Newton inversion, etc.).
+        \item Use univariate representation over $\F_p$ to perform
+          fast arithmetics (FFT multiplication, Newton inversion,
+          etc.).
         \item Use \cite{Couveignes00} algorithm to move to
           $(\U_0,\ldots,\U_k)$.
         \end{itemize}
@@ -957,7 +958,7 @@
 	\\
 	& & & **[r](X - [p^k - 1]P)\ar@{-}"3,3"_-{\times} \\
 	& & T_{1,\euler(p^{k-1})}\ar@{.}"4,2" & {\vdots} \\
-	& T_{k-1,(p-1)/2}\ar@{-}"7,1"_{\times} & & **[r](X-[p^k-p+2]P)\ar@{-}"3,3"_-{\times} \\
+	& T_{k-1,p-1}\ar@{-}"7,1"_{\times} & & **[r](X-[p^k-p+2]P)\ar@{-}"3,3"_-{\times} \\
 	& & {\vdots} & **[r](X - [p^k-p+1]P)\ar@{-}"3,3"^-{\times} \\
 	& {\vdots} & & {\vdots} \\
     T_k & & & **[r](X - [2p - 1]P)\ar@{-}"8,3"_-{\times} \\
@@ -995,7 +996,7 @@
 	\\
 	& & & **[r](X - P_n)^{\frob^{p-1}_{k-1}}\ar@{-}"3,3"_-{\times} \\
 	& & \alt<1>{T_{1,n}^{\phantom{\frob_{k-2}^{p-1}}}}{T_{1,m}^{\frob_{k-2}^{p-1}}}\ar@{.}"4,2" & {\vdots} \\
-	& \alt<1-2>{T_{k-1,(p-1)/2}^{\phantom{\frob_0^{p-1}}}}{T_{k-1,1\phantom{(-p)/2}}^{\frob_0^{p-1}}}\ar@{-}"7,1"_{\times} & & **[r](X-P_n)^{\frob_{k-1}}\ar@{-}"3,3"_-{\times} \\
+	& \alt<1-2>{T_{k-1,p-1}^{\phantom{\frob_0^{p-1}}}}{T_{k-1,1\phantom{-p}}^{\frob_0^{p-1}}}\ar@{-}"7,1"_{\times} & & **[r](X-P_n)^{\frob_{k-1}}\ar@{-}"3,3"_-{\times} \\
 	& & {\vdots} & **[r](X - P_n)\ar@{-}"3,3"^-{\times} \\
 	& & & \\
     T_k & & & **[r](X - P_2)^{\frob^{p-1}_{k-1}}\ar@{-}"8,3"_-{\times} \\
@@ -1020,7 +1021,7 @@
   \[\xymatrix@R=8pt{
     \deg T_k=p^k & \deg T_{k-1} = p^{k-1} & \deg T_1 = p & \deg (X - P) = 1
     \\
-    & **[r]T_{k-1}^{\frob^{(p-1)/2}}\ar[dl]_-\times \\
+    & **[r]T_{k-1}^{\frob^{p-1}}\ar[dl]_-\times \\
     T_k &  \\
     & **[r]T_{k-1}^{\frob}\ar[ul]_-\times \ar@<-4pt>@{.>}[uu] & **[r]T_1^{\frob^p}\ar@{.>}[dl]\\
     & **[r]T_{k-1}\ar[uul]^-\times \ar@<-4pt>[u] & \\
@@ -1095,17 +1096,17 @@
     Let $A_i$ be the polynomial with coefficients in $\F_q$ sending
     $P$ over $[i]P'$, then
     \[A_1([j]P) = [j]P' \text{ for every $j$.}\]
-    Now let $\frob(P') = [\lambda]P'$, then $A_1(\frob([j]P)) =
-    \frob(A_1([j]P)) = \frob([j]P') = [j][\lambda]P'$.
+    Now let $\frob_q(P') = [\lambda]P'$, then $A_1(\frob_q([j]P)) =
+    \frob(A_1([j]P)) = \frob_q([j]P') = [j][\lambda]P'$.
 
-    So \alert{$\;A_1\circ\frob = A_\lambda \bmod T_k$}. Solving this
+    So \alert{$\;A_1\circ\frob_q = A_\lambda \bmod T_k$}. Solving this
     is \emph{modular composition}.
   \end{block}
 
   \begin{block}{Modular composition}
     \begin{itemize}
     \item Theoretical complexity \blue{$O(\ell\log_pq)$}, practical
-      complexity \blue{$O(\ell^2\log_pq)$}\dots
+      complexity \blue{$O(\ell^2\log_p^2q)$}\dots
     \item \dots but still much faster than a single interpolation.
     \end{itemize}
   \end{block}
