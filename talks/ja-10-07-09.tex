@@ -1,0 +1,675 @@
+\documentclass[10pt]{beamer}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[all]{xy}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{trees}
+
+%% Stuff
+\renewcommand{\le}{\leqslant}
+\renewcommand{\ge}{\geqslant}  % comme François le demande...
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}  % colouring
+%% Algèbre
+\newcommand{\clot}[1]{\bar{#1}}  % clôture algèbrique
+\newcommand{\card}[1]{\# #1}  % cardinalité d'un ensemble
+\DeclareMathOperator{\car}{char}  % caractéristique d'un corps
+\DeclareMathOperator{\Frac}{Frac}  % corps des fractions
+\newcommand{\Z}{\mathbb{Z}}  % les entiers
+\newcommand{\K}{\mathbb{K}}  % un corps
+\newcommand{\LK}{\mathbb{L}}  % encore un corps
+\newcommand{\U}{\mathbb{U}}  % encore un corps
+\newcommand{\F}{\mathbb{F}}  % un corps fini
+\newcommand{\Q}{\mathbb{Q}}  % les rationnels
+\newcommand{\R}{\mathbb{R}}  % les réels
+\newcommand{\C}{\mathbb{C}}  % les complexes
+\newcommand{\isom}{\cong}  % isomorphisme de corps
+\newcommand{\frob}{\varphi}  % fröbenius
+\DeclareMathOperator{\Gal}{Gal}  % groupe de Galois
+\DeclareMathOperator{\Tr}{Tr}  % trace
+\DeclareMathOperator{\PTr}{PTr}  % pseudotrace
+\DeclareMathOperator{\Norm}{N} % norme
+\newcommand{\euler}{\phi}  % indicatrice d'Euler
+\DeclareMathOperator{\ord}{ord}  % l'ordre d'un élément
+\newcommand{\AS}[1]{\mathcal{#1}}  % la police des polynômes d'AS
+\DeclareMathOperator{\rev}{rev}  % le reverse d'un polynôme
+%% Courbes
+\DeclareMathOperator{\Jac}{Jac}  % la jacobienne
+\newcommand{\Proj}{\mathbb{P}}  % espace projectif
+\newcommand{\0}{\mathcal{O}}  % point de base d'une courbe
+\newcommand{\ecpoint}[3]{[#1:#2:#3]}  % un point d'une courbe
+\newcommand{\isog}[1]{\mathcal{#1}}  % la police des isogénies
+\newcommand{\I}{\isog{I}}  % une isogénie I
+\newcommand{\Hasse}{H}  % l'invariant de Hasse
+\newcommand{\divpol}{f}  % polynôme de division
+%% Autre
+\newcommand{\tildO}{\tilde{O}}  % la notation O~ qui oublie les log
+\newcommand{\Mint}{\mathrm{\sf M}_\text{int}}  % fonction de multiplication
+\newcommand{\Mpol}[1][]{\mathrm{\sf M}_\text{pol}^{#1}}  % fonction de multiplication
+\newcommand{\Mult}[1][]{\mathrm{\sf M}_{#1}}  % fonction de multiplication
+\newcommand{\Push}{\mathrm{\sf P}}  % fonction de push-down
+\newcommand{\Lift}{\mathrm{\sf L}}  % fonction de lift-up
+\newcommand{\Trace}{\mathrm{\sf T}}  % fonction de trace
+\newcommand{\Frob}{\mathrm{\sf F}}  % fonction de frobenius itéré
+\newcommand{\Ptr}{\mathrm{\sf PT}}  % fonction de pseudo-trace
+\newcommand{\ModComp}{\mathrm{\sf C}}  % fonction de composition modulaire
+\newcommand{\alg}[1]{\textsf{#1}}  % la police des algorithmes
+\newcommand{\wrt}{\dashv}  % appartenance forte, a\wrt A signifie que a est représenté comme un élément de A
+\DeclareMathOperator{\op}{op}  % une opération
+
+\newenvironment{algorithm}[3]{\begin{center}\begin{minipage}{0.85\textwidth}
+      \sf
+      \rule{\textwidth}{0.2pt}\\
+      \makebox[\textwidth][c]{\textbf{#1}}\\
+      \rule[0.5\baselineskip]{\textwidth}{0.2pt}\\
+      \textbf{Input~~} #2\\
+      \textbf{Output} #3
+      \smallskip
+      \begin{enumerate}
+}{\end{enumerate}
+      \rule{\textwidth}{0.2pt}
+\end{minipage}\end{center}}
+
+% beamer-specific
+%\setbeamertemplate{theorem begin}{
+%  \begin{\inserttheoremblockenv}{
+%      Théorème
+%      \ifthenelse{\equal{\inserttheoremaddition}{}}
+%		 {}
+%		 {(\inserttheoremaddition)}    
+		 %  \ifx\inserttheoremaddition\@empty\else\ (\inserttheoremaddition)\fi
+%    }
+%}
+
+\mode<presentation>{%
+  \usetheme[]{Madrid}
+  \usefonttheme[onlymath]{serif}
+  \usecolortheme{seahorse}
+  \usecolortheme{rose}
+}
+
+
+\title[Computing isogenies in small characteristic]{Computing isogenies of elliptic curves in small characteristics}
+\author[L.~De~Feo]{L.~De~Feo}
+\institute[TANC, LIX]{Projet TANC, LIX, École Polytechnique, France}
+\date[Journées Arithmétiques, July 9, 2009]{Journées Arithmétiques\\July 9, 2009\\Université Jean Monnet - St. Étienne}
+
+
+%% \AtBeginSection[]
+%% {
+%%   \begin{frame}<beamer>
+%%     \frametitle{Plan}
+%%     \tableofcontents[currentsection]
+%%   \end{frame}
+%% }
+
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Compute isogenies}
+
+  \vspace{-2mm}
+
+  \begin{block}{What?}
+    \centering
+    (Separable) isogenies: (separable) non-constant regular maps of
+    elliptic curves that are group homomorphism
+    
+    \begin{itemize}
+    \item Finite kernel, onto, given by one rational fractions,
+    \item we are specially interested elliptic curves over finite fields.
+    \end{itemize}
+  \end{block}
+
+  \vspace{-1mm}
+
+  \begin{block}{Why?}
+    \begin{columns}[T]
+      \begin{column}{0.53\textwidth}
+        \begin{itemize}
+        \item Point couting.
+        \item Proving hardness of discrete logarithm.
+        \item Move discrete logarithms to easier curves.
+        \end{itemize}
+      \end{column}
+      \begin{column}{0.46\textwidth}
+        \begin{itemize}
+        \item Speeding up point multiplication.
+        \item Hide weak curves behind chains of isogenies.
+        \item Define hash functions.
+        \end{itemize}
+      \end{column}
+    \end{columns}
+  \end{block}
+
+  \vspace{-1.5mm}
+
+  \begin{block}{\alt<2-3>{Normalised (or strict) isogenies}{Separable isogenies, odd degree (simplified Weierstrass model)}}
+    \[\quad\I(X,Y) = \left(\frac{g(X)}{h^2(X)},
+    \only<1-2>{\alert<2>{c}}Y\left(\frac{g(X)}{h^2(X)}\right)'\right)\]
+    $\;\ell\;=\;\deg\I\;=\;
+    \card{\ker\I} \;=\; 2\deg h + 1\;$ odd.
+  \end{block}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Vélu formula}
+  
+  \begin{block}{Vélu formula for algebraically closed fields}
+    \[E : y^2 = x^3 + ax + b\]
+    Being given the points of a subgroup $H$ of $E$,
+    \begin{align*}
+      &\I(\0_E) = \I(\0_{E/H})\\
+      &\begin{aligned}
+        \I(P) = \Biggl( &x(P) + \sum_{Q\in H - \{\0_E\}}x(P+Q) - x(Q) \quad,\\
+        &y(P) + \sum_{Q\in H - \{\0_E\}}y(P+Q) - y(Q) \Biggr) \text{.}
+      \end{aligned}
+    \end{align*}
+
+    The curve $E'=E/C$ is given by simple formulae. This is the
+    normalised isogeny.
+  \end{block}
+
+  \begin{block}{Rational isogenies on generic fields}
+    \centering Knowing $\qquad h^2(X) = \prod_{Q\in H-\{\0_E\}}\left(X
+    - x(Q)\right)\qquad$ is enough.
+  \end{block}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Computing isogenies: which problem?}
+
+  \begin{block}{$j$-invariant}
+    \begin{columns}
+      \begin{column}{0.5\textwidth}
+        \[E : y^2 = x^3 + ax + b\]
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        \[j(E) = \frac{1728(4a)^3}{16(4a^3 + 27b^2)}\]
+      \end{column}
+    \end{columns}
+  \end{block}
+  
+  \begin{block}{Modular polynomial}
+    \centering
+    $\Phi_\ell(j(E),j(E')) = 0\quad$ iff $\;E\;$ $\ell$-isogenous to $\;E'\;$
+
+    \begin{itemize}
+    \item Symmetric polynomial, degree $\ell$, integer coefficients of
+      $\tildO(\ell)$ bits.
+    \item Computed in $\tildO(\ell^3)$ bit operations.
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Which problem?}
+    \begin{enumerate}
+    \item Given $\;E$, find an $\ell$-isogenous curve and an $\ell$-isogeny.
+    \item Given $\;E\;$ and $\;E'$, find an $\ell$-isogeny.
+    \end{enumerate}
+    \begin{itemize}
+    \item Traditional solution to 1: find a curve by factoring
+      $\Phi_\ell(X,j(E))$, then solve 2.
+    \item In SEA one needs 1, other applications require 2. We'll
+      focus on 2.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Computing isogenies in $\C$}
+
+  \begin{block}{Elliptic functions}
+    \vspace{-3mm}
+    \begin{gather*}
+      \xymatrix{
+      E \;\isom\; \C/\left(\omega_1\Z + \omega_2\Z\right) \ar[r]^\I &
+      \C/\left(\tfrac{\omega_1}{\ell}\Z + \omega_2\Z\right) \;\isom\; E'
+      }\\
+      \xymatrix{
+        z \ar@{|->}[r] & z
+      }
+    \end{gather*}
+  \end{block}
+  
+  \begin{block}{Weierstrass functions}
+    \vspace{-3mm}
+    \begin{gather*}
+      \wp_E(z) = z^{-2} + \sum_{k=1}^{\infty}c_kz^{2k} \quad\text{with}\\
+      c_1 = -\frac{a}{5}, \qquad c_2 = -\frac{b}{7}, 
+      \qquad c_k = \frac{3}{(k-2)(2k+3)}\sum_{j=1}^{k-2}c_jc_{k-1-j}
+    \end{gather*}
+
+    \vspace{-3mm}
+    \begin{columns}
+      \begin{column}{0.4\textwidth}
+        \centering
+        and they verify
+      \end{column}
+      \begin{column}{0.6\textwidth}
+        \begin{equation*}
+          \left\{\begin{aligned}
+            \wp_E'^2 &= 4\wp_E^3 + 4a\wp_E + 4b\wp_E \text{,}\\
+            \wp_{E'}(z) &=
+            \sum_{i=0}^{\ell-1}\wp_E\left(z+i\tfrac{\omega_1}{\ell}\right) -
+            \wp_E\left(i\tfrac{\omega_1}{\ell}\right)
+            \text{.}
+          \end{aligned}\right.
+        \end{equation*}
+      \end{column}
+    \end{columns}
+  \end{block}
+  
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{The large characteristic case}
+
+  \vspace{-1mm}
+  
+  \begin{block}{Weierstrass functions}
+    \vspace{-3mm}
+    \begin{gather*}
+      \wp_E(z) = z^{-2} + \sum_{k=1}^{\infty}c_kz^{2k} \quad\text{with}\\
+      c_1 = -\frac{a}{5}, \qquad c_2 = -\frac{b}{7}, 
+      \qquad c_k = \alert<1>{\frac{3}{(k-2)(2k+3)}}\sum_{j=1}^{k-2}c_jc_{k-1-j}
+    \end{gather*}
+    division by zero when $2k+3 \ge p$.
+  \end{block}
+
+  \begin{block}{Large characteristic algorithms \uncover<2>{\alert{*Only work for normalised isogenies}}}
+    Work with truncated power series with precision $\ll \frac{p}{2}$.
+    \begin{itemize}
+    \item['91] Charlap, Coley, Robbins\uncover<2>{\alert{*}} \hfill $O(\ell^2)$
+    \item['92] Elkies \hfill $\tildO(\ell^2)$
+    \item['92] Atkin \hfill $\tildO(\ell^2)$
+    \item['98] Elkies \hfill $\tildO(\ell^2)$
+    \item['08] Bostan, Morain, Salvy, Schost\uncover<2>{\alert{*}} \hfill $\tildO(\ell)$
+    \end{itemize}
+  \end{block}
+
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Using $p$-adics: Lercier-Sirvent}
+
+  \begin{block}{Weierstrass functions}
+    \vspace{-3mm}
+    \begin{gather*}
+      \wp_E(z) = z^{-2} + \sum_{k=1}^{\infty}c_kz^{2k} \quad\text{with}\\
+      c_1 = -\frac{a}{5}, \qquad c_2 = -\frac{b}{7}, 
+      \qquad c_k = \alert{\frac{3}{(k-2)(2k+3)}}\sum_{j=1}^{k-2}c_jc_{k-1-j}
+    \end{gather*}
+  \end{block}
+
+  \begin{block}{Lercier, Sirvent 2009}
+    Work in the $p$-adics to avoid divisions by zero.
+    \begin{itemize}
+    \item Lift $\;E\;$ to $\;\bar{E}\;$ in $\;\Q_q\;$.
+    \item Problem: the lift of $\;E'\;$ is not necessarily normalised.
+    \item Lift $\;\Phi_\ell$, factor $\;\bar{\Phi}_\ell(X,j(\bar{E}))\;$ to
+      obtain a normalised $\;\bar{E}'$,
+    \item use BMMS to compute the lifted isogeny, then reduce.
+    \end{itemize}
+    Works for any $p$, complexity $\tildO(\ell^3)$, but solves problem
+    1 directly.
+  \end{block}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Using the $p$-torsion}
+
+  \begin{block}{Other algorithms}
+    \begin{itemize}
+    \item['94] Couveignes I \hfill $O(\ell^3)$
+    \item['96] $p=2$, Lercier \hfill $\Omega(\ell^3)$ ?
+    \item['96] Couveignes II (+ D.F.) \hfill $\tildO(\ell^2)$
+    \end{itemize}
+  \end{block}
+  
+  \begin{block}{Couveignes II}
+    Interpolate a polynomial on a large enough subgroup of $\;E$,
+    reconstruct the isogeny from there.
+    \begin{itemize}
+    \item $\I(E[p^k]) = E'[p^k]$, $\qquad E[p^k] \isom E'[p^k] \isom \Z/p^k\Z$,
+    \item for $\;E[p^k] = \langle P\rangle\;$ there's $\;\euler(p^k)\;$
+      possible images of $\;P\;$ in $\;E'[p^k]$,
+    \item try them all until a fraction of the form
+      $\frac{g(X)}{h^2(X)}$ is found.
+    \item One needs $\;\euler(p^k) > 4\ell\;$ in order to succeed.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Structure of the $p^k$-torsion}
+
+  \begin{columns}
+    \begin{column}{0.12\textwidth}
+      \[\xymatrix{
+        \U_k \ar@{-}[d]^p\\
+        \U_{k-1} \ar@{--}[d]\\
+        \U_{i_0+1} \ar@{-}[d]^p\\
+        \U_{i_0} = \K \ar@{--}[d]\\
+        \U_1 \ar@{-}[d]^1\\
+        \U_0 = \F_q
+      }\]
+    \end{column}
+    \begin{column}{0.86\textwidth}
+      \vspace{-2mm}
+      \begin{definition}[$p^k$-torsion tower]
+        $(\F_q = \U_0, \ldots, \U_k)$ is the tower of field extensions of
+        minimal degree s.t. for any $i$
+        \[E[p^i] \subset E(\U_i)\text{.}\]
+      \end{definition}
+      
+      \vspace{-2mm}
+      \begin{theorem}[Structure of $(\U_0, \ldots, \U_k)$]
+        There is a $i_0\ge1$ s.t. $\U_{i_0} = \U_1$ and for $i \ge i_0$
+        \begin{center}
+          $[\U_{i+1}:\U_i] = p$.
+        \end{center}
+        And $\;[\U_1:\U_0]\;$ divides $\;p-1$.
+      \end{theorem}
+
+      \vspace{-2mm}
+      \begin{block}{Complexity}
+        In general towers tend to explode early. In practice
+        $[\U_k:\F_q] \sim p^k$
+        \begin{itemize}
+        \item Interpolation of degree $p^k$ in $\U_k$ costs
+          $\tildO(p^k)$ operations in $\U_k$,
+        \item that is $\tildO(p^{2k}\log q)$ operations in $\F_p$, to
+          be repeated $O(\euler(p^k))$ times. Total complexity is
+          $\tildO(\ell^3)$.
+        \end{itemize}
+      \end{block}
+      
+    \end{column}
+  \end{columns}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Faster interpolation using effective Galois groups}
+
+  \begin{center}
+    Interpolation of $\;v_i\mapsto s_i\;$ is defined modulo $T$, where
+    \[T(X) = \prod_i (X - v_i)\]
+  \end{center}
+  
+  \vspace{-3mm}
+  
+  \begin{block}{Lagrange formula}
+      \centering
+      \begin{onlyenv}<1-5>
+      \begin{equation*}
+        \only<1>{A(X) = \sum_{i=1}^nv_i\frac{T(X)}{X-v_i}\prod_{j\ne
+            i}\frac{1}{v_i-v_j}} \only<2>{A(X) =
+          \sum_{i=1}^n\frac{s_i}{T'(v_i)}\cdot\frac{T(X)}{X-v_i}}
+        \only<3>{A_1(X) = \frac{s_1}{T'(v_1)(X-v_2)}+\frac{s_2}{T'(v_2)(X-v_1)}}
+        \only<4>{A_2(X) = \frac{s_3}{T'(v_3)(X-v_4)}+\frac{s_4}{T'(v_4)(X-v_3)}}
+        \only<5>{A(X) = T_2(X)A_1(X) + T_1(X)A_2(X)}
+      \end{equation*}
+      \end{onlyenv}
+      \only<6>{Complexity $\tildO(n)$ operations in the coefficient
+        ring.}  \only<7>{Let now $v\in\U_2$,
+        $\sigma\in\Gal(\U_2/\U_0)$ and
+        $v_i=\sigma^{i-1}(v)$. Rearrange the tree, then
+        $T_1',T_2'\in\U_1[X]$ and $T\in\U_0[X]$.}  \only<8-9>{For a
+        polynomial $P$ note $P^\sigma$ the action on the coefficients
+        of $P$, then} \only<10>{Complexity $\tildO(n)$ operations in $\U_0$.}
+  \end{block}
+
+  \begin{block}<2->{Interpolation by chinese remindering}
+    \centering
+    \begin{tikzpicture}
+      \begin{scope}
+        [level distance=1cm,
+          level 1/.style={sibling distance=4cm},
+          level 2/.style={sibling distance=2cm},
+          every node/.style={rounded corners,thick,draw=black}]
+        \node{\alert<5>{$T(X)$}}
+        child { node {\alert<3>{$T_1\only<7->{'}(X)$}}
+          child {node {\alert<3>{$X-\alt<7->{v}{v_1}$}}}
+          child {node {\alert<3>{$X-\alt<7->{\sigma^2(v)}{v_2}$}}}
+        }
+        child {node {\alert<4>{\alt<9->{$T_1'(X)^\sigma$}{$T_2\only<7->{'}(X)$}}}
+          child {node {\only<-9>{\alert<4>{\alt<8->{$(X-v)^\sigma$}{$X-\alt<7->{\sigma(v)}{v_3}$}}}}}
+          child {node {\only<-9>{\alert<4>{\alt<8->{$(X-\sigma^2(v))^\sigma$}{$X-\alt<7->{\sigma^3(v)}{v_4}$}}}}}
+        };
+      \end{scope}
+    \end{tikzpicture}
+  \end{block}
+\end{frame}
+
+
+%%
+
+\begin{frame}
+  \frametitle{Reducing the number of interpolations}
+
+  \begin{block}{Couveignes' algorithm}
+    \begin{itemize}
+    \item We need $O(p^k)$ interpolations, each sending $P\in E[p^k]$
+      over $Q\in E'[p^k]$,
+    \item $Q,R\in E'[p^k]$ are conjugates tied by the relation
+      $Q=\frob_q^i(P)$ for some $i$.
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Using modular composition}
+    Let $A_Q$ be the polynomial with coefficients in $\F_q$ sending
+    $P$ over $Q$, then
+    \[A_Q([j]P) = [j]Q \text{ for every $j$.}\]
+    Now let $\;\frob_q(Q) = [\lambda]Q\;$, then $\;A_Q(\frob_q([j]P)) =
+    [j][\lambda]Q$.
+
+    So \alert{$\;A_Q\circ\frob_q = A_{[\lambda]Q} \bmod T$}. Solving this
+    is \emph{modular composition}.
+  \end{block}
+
+  \begin{block}{Modular composition}
+    \begin{itemize}
+    \item Theoretical complexity \blue{$O(\ell\log_pq)$}, practical
+      complexity \blue{$O(\ell^2\log_p^2q)$}\dots
+    \item \dots but still much faster than a single interpolation.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Effective Artin-Schreier towers (D.F., Schost '09)}
+
+  \begin{columns}
+    \begin{column}{0.1\textwidth}
+      \Large\[\xymatrix{
+        \U_k\ar@{-}[d]\\
+        \U_{k-1} \ar@{--}[dd]\\
+        \\
+        \U_1 \ar@{-}[d]\\
+        \U_0
+      }\]
+    \end{column}
+    \begin{column}{0.85\textwidth}
+      \vspace{-3mm}
+      \begin{block}{Primitive towers}
+        \begin{itemize}
+        \item Find special \emph{primitive} Artin-Schreier towers
+          s.t. the generator of $\U_i/\U_{i-1}$ is also a generator of
+          $\U_i/\F_p$.
+        \item Use univariate representation over $\F_p$ to perform
+          fast arithmetics (FFT multiplication, Newton inversion,
+          etc.).
+        \item Use fast isomorphisms to treat generic towers of
+          extensions.
+        \end{itemize}
+      \end{block}
+      
+      \begin{block}{Level embedding}
+        \begin{itemize}
+        \item Move up and down in the structure,
+        \item Effective frobenius maps.
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Implementation}
+
+  \begin{itemize}
+  \item Implementation in C++ with NTL.
+  \item Porting code to SAGE.
+  \item Some parts of the code are distributed already, if you can't
+    wait:
+    \blue{\url{http://www.lix.polytechnique.fr/Labo/Luca.De-Feo/FAAST}}
+  \end{itemize}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Benchmarks}
+
+  \begin{columns}
+    \begin{column}{0.4\textwidth}
+      \begin{itemize}
+      \item \texttt{NTL} implemantation vs.  \texttt{Magma}
+        implementation (no fast Galois groups)
+      \item $\K = \F_{2^{101}}$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.6\textwidth}
+      \includegraphics[width=\textwidth]{2-101}
+
+    \end{column}
+  \end{columns}
+  
+  \smallskip
+  \footnotesize
+  \centering
+  \begin{tabular}{r r r r r r r r}
+    \hline
+    $\ell$ & $E[p^k]$ & $E'[p^k]$ & Interp & Step 6 & ModComp & Avg tries & Avg loop time\\
+    \hline
+    31 & 1.3128 & 1.3128 & 1.1058 & 0.00218 & 0.00218 & 64 & 0.279\\
+    61 & 3.5454 & 3.5464 & 2.5236 & 0.00783 & 0.00900 & 128 & 2.154 \\
+    127 & 9.2975 & 9.3026 & 5.6881 & 0.03147 & 0.03634 & 256 & 17.359 \\
+    251	& 23.7984 & 23.7984 & 12.7251 & 0.12415 & 0.14519 & 512 & 137.902 \\
+    397 & 59.7439 & 59.7579 & 28.3387 & 0.36822 & 0.58027 & 1024 & 971.254 \\
+    \hline
+  \end{tabular}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Benchmarks}
+
+  
+  \begin{columns}
+    \begin{column}{0.4\textwidth}
+      \begin{itemize}
+      \item \texttt{NTL} implemantation
+      \item $\K = \F_{3^{64}}$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.6\textwidth}
+      \includegraphics[width=\textwidth]{3-64}
+
+    \end{column}
+  \end{columns}
+  
+  \smallskip
+  \footnotesize
+  \centering
+  \begin{tabular}{r r r r r r r r}
+    \hline
+    $\ell$ & $E[p^k]$ & $E'[p^k]$ & Interp & Step 6 & ModComp & Avg tries & Avg loop time\\
+    \hline
+    11 & 0.6109 & 0.6109 & 0.4669 & 0.0194 & 0.0249 & 13 & 0.58 \\
+    37 & 2.3946 & 2.3916 & 2.1066 & 0.1988 & 0.1381 & 40 & 13.48 \\
+    113 & 9.8045 & 9.8055 & 8.5377 & 1.7712 & 0.8690 & 121 & 319.47 \\
+    359 & 38.3292 & 38.3972 & 34.7147 & 17.5004 & 7.0088 & 364 & 8921.35 \\ 
+    389 & 159.8280 & 159.5690 & 147.741 & 45.1558 & 69.9133 & 1093 & 125770.52  \\   
+    \hline
+  \end{tabular}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Record Timings!}
+
+  
+  \begin{columns}
+    \begin{column}{0.4\textwidth}
+      \begin{itemize}
+      \item \texttt{NTL} implemantation
+      \item $\K = \F_{2^{1023}}$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.6\textwidth}
+      \includegraphics[width=\textwidth]{2-1023}
+
+    \end{column}
+  \end{columns}
+  
+  \smallskip
+  \footnotesize
+  \centering
+  \begin{tabular}{r r r r r r r r}
+    \hline
+    $\ell$ & $E[p^k]$ & $E'[p^k]$ & Interp & Step 6 & ModComp & Avg tries & Avg loop time\\
+    \hline
+    31 & 21.182 & 21.174 & 11.597 & 0.0178 & 0.02541 & 64 & 2.768 \\
+    61 & 58.656 & 58.665 & 26.826 & 0.0645 & 0.10398 & 128 & 21.576 \\
+    127 & 154.357 & 154.296 & 61.202 & 0.2580 & 0.41578 & 256 & 172.503 \\
+    251 & 383.773 & 383.861 & 138.428 & 0.9950 & 1.66120 & 512 & 1360.000 \\
+    397 & 931.022 & 931.610 & 313.609 & 3.1819 & 6.73608 & 1024 & 10156.011 \\
+    \hline
+  \end{tabular}
+\end{frame}
+
+
+\end{document}
+
+
+% Local Variables:
+% mode:flyspell
+% ispell-local-dictionary:"british"
+% End:
+%
+
+% LocalWords:  Isogeny abelian isogenies hyperelliptic supersingular Frobenius
+% LocalWords:  isogenous
