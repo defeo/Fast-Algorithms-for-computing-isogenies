@@ -138,13 +138,13 @@
       \begin{column}{0.53\textwidth}
         \begin{itemize}
         \item Point couting.
-        \item Proving hardness of discrete logarithm.
+        \item Prove hardness of discrete logarithm.
         \item Move discrete logarithms to easier curves.
         \end{itemize}
       \end{column}
       \begin{column}{0.46\textwidth}
         \begin{itemize}
-        \item Speeding up point multiplication.
+        \item Speed up point multiplication.
         \item Hide weak curves behind chains of isogenies.
         \item Define hash functions.
         \end{itemize}
@@ -154,11 +154,44 @@
 
   \vspace{-1.5mm}
 
-  \begin{block}{\alt<2-3>{Normalised (or strict) isogenies}{Separable isogenies, odd degree (simplified Weierstrass model)}}
-    \[\quad\I(X,Y) = \left(\frac{g(X)}{h^2(X)},
-    \only<1-2>{\alert<2>{c}}Y\left(\frac{g(X)}{h^2(X)}\right)'\right)\]
-    $\;\ell\;=\;\deg\I\;=\;
-    \card{\ker\I} \;=\; 2\deg h + 1\;$ odd.
+  \begin{block}{
+	\begin{overprint}
+	\onslide<1> Multiplication	
+	\onslide<2> \emph{Small} Frobenius map
+	\onslide<3> Frobenius endomorphism
+	\onslide<4> Separable isogenies, odd degree (simplified Weierstrass model)
+	\onslide<5-6> Normalised (or strict) isogenies
+	\end{overprint}
+	}
+    \begin{overprint}
+      \onslide<1>
+      \[\begin{aligned}
+	{}[m] : E(\clot{\K}) &\rightarrow E(\clot{\K})\\
+	                   P &\mapsto [m]P
+      \end{aligned}\]
+      $\;\ker\I = E[m]$.
+
+      \onslide<2>
+      \[\begin{aligned}
+	\frob_p : E(\clot{\K}) &\rightarrow E^{(p)}(\clot{\K})\\
+	                   (X,Y) &\mapsto (X^p,Y^p)
+      \end{aligned}\]
+      where $\;\;E^{(p)} \;:\; Y^2 = X^3 + a^pX + b^p\qquad$ if $p =
+      \car(\K)$.
+ 
+      \onslide<3>
+      \[\begin{aligned}
+	\frob_q : E(\clot{\K}) &\rightarrow E(\clot{\K})\\
+	                   (X,Y) &\mapsto (X^q,Y^q)
+      \end{aligned}\]
+      if $\K = \F_q$ then $E^{(q)} = E$, $\;\deg \frob_q = q$.
+
+      \onslide<4-6>
+      \[\quad\I(X,Y) = \left(\frac{g(X)}{h^2(X)},
+      \only<4-5>{\alert<5>{c}}Y\left(\frac{g(X)}{h^2(X)}\right)'\right)\]
+      $\;\ell\;=\;\deg\I\;=\;
+      \card{\ker\I} \;=\; 2\deg h + 1\;$ odd.
+    \end{overprint}
   \end{block}
 \end{frame}
 
@@ -169,7 +202,7 @@
   
   \begin{block}{Vélu formula for algebraically closed fields}
     \[E : y^2 = x^3 + ax + b\]
-    Being given the points of a subgroup $H$ of $E$,
+    Given a subgroup $H$ of $E$, $E/H$ is an elliptic curve. $\I:E\rightarrow E/H$ given by
     \begin{align*}
       &\I(\0_E) = \I(\0_{E/H})\\
       &\begin{aligned}
@@ -178,11 +211,11 @@
       \end{aligned}
     \end{align*}
 
-    The curve $E'=E/C$ is given by simple formulae. This is the
+    $E'=E/H$ is recovered through simple formulae. This is the
     normalised isogeny.
   \end{block}
 
-  \begin{block}{Rational isogenies on generic fields}
+  \begin{block}{Rational isogenies on non-algebraically closed fields}
     \centering Knowing $\qquad h^2(X) = \prod_{Q\in H-\{\0_E\}}\left(X
     - x(Q)\right)\qquad$ is enough.
   \end{block}
@@ -193,17 +226,6 @@
 \begin{frame}
   \frametitle{Computing isogenies: which problem?}
 
-  \begin{block}{$j$-invariant}
-    \begin{columns}
-      \begin{column}{0.5\textwidth}
-        \[E : y^2 = x^3 + ax + b\]
-      \end{column}
-      \begin{column}{0.5\textwidth}
-        \[j(E) = \frac{1728(4a)^3}{16(4a^3 + 27b^2)}\]
-      \end{column}
-    \end{columns}
-  \end{block}
-  
   \begin{block}{Modular polynomial}
     \centering
     $\Phi_\ell(j(E),j(E')) = 0\quad$ iff $\;E\;$ $\ell$-isogenous to $\;E'\;$
@@ -350,7 +372,7 @@
   
   \begin{block}{Couveignes I}
     \begin{itemize}
-    \item Weierstrass 
+    \item Use formal groups to develop at infinity.
     \end{itemize}
   \end{block}
 \end{frame}
@@ -364,20 +386,16 @@
     \begin{itemize}
     \item['94] Couveignes I \hfill $O(\ell^3)$
     \item['96] $p=2$, Lercier \hfill $\Omega(\ell^3)$ ?
-    \item['96] Couveignes II (+ D.F.) \hfill $\tildO(\ell^2)$
+    \item['96] Couveignes II (+ D.F., Schost) \hfill $\tildO(\ell^2)$
     \end{itemize}
   \end{block}
   
   \begin{block}{Couveignes II}
-    Interpolate a polynomial on a large enough subgroup of $\;E$,
-    reconstruct the isogeny from there.
     \begin{itemize}
-    \item $\I(E[p^k]) = E'[p^k]$, $\qquad E[p^k] \isom E'[p^k] \isom \Z/p^k\Z$,
-    \item for $\;E[p^k] = \langle P\rangle\;$ there's $\;\euler(p^k)\;$
-      possible images of $\;P\;$ in $\;E'[p^k]$,
-    \item try them all until a fraction of the form
-      $\frac{g(X)}{h^2(X)}$ is found.
-    \item One needs $\;\euler(p^k) > 4\ell\;$ in order to succeed.
+    \item Exploits the cyclic structure of the $p^k$-torsion,
+    \item interpolates a polynomial over $E[p^k]$,
+    \item reconstructs a rational fraction and tests if it is an isogeny.
+    \item Uses fast computer algebra techniques.
     \end{itemize}
   \end{block}
 \end{frame}
@@ -400,6 +418,15 @@
     \end{column}
     \begin{column}{0.86\textwidth}
       \vspace{-2mm}
+      \begin{block}{Computing the $p^i$-torsion}
+	\begin{itemize}
+        \item Iteratively, inverting the map $\;[p]$,
+        \item \blue{Voloch Formula:}
+          $\;X^p - X = \frac{\sqrt[p]{y_P\beta(x_p)}}{h}$.
+        \end{itemize}
+      \end{block}
+
+      \vspace{-2mm}
       \begin{definition}[$p^k$-torsion tower]
         $(\F_q = \U_0, \ldots, \U_k)$ is the tower of field extensions of
         minimal degree s.t. for any $i$
@@ -414,22 +441,366 @@
         \end{center}
         And $\;[\U_1:\U_0]\;$ divides $\;p-1$.
       \end{theorem}
+    \end{column}
+  \end{columns}
+\end{frame}
 
-      \vspace{-2mm}
-      \begin{block}{Complexity}
-        In general towers tend to explode early. In practice
-        $[\U_k:\F_q] \sim p^k$
+%%
+
+\begin{frame}
+  \frametitle{Summarizing}
+
+  \vspace{-1mm}
+
+  \begin{block}{Couveignes' algorithm}
+    \begin{enumerate}
+    \item Compute a $p$-torsion point of $E$,
+    \item repeatedly apply Voloch formulae to compute $P$, a $p^k$-torsion
+      point of $E$,
+    \item do the same to compute $P'$, a $p^k$-torsion point of $E'$,
+    \item for $i \in [1,\dots,p^k-1]$, $i$ prime to $p$
+      \begin{enumerate}
+      \item interpolate the polynomial that sends $P$ over $[i]P'$,
+      \item deduce a rational fraction and check if its denominator is
+        a square.
+      \end{enumerate}
+    \end{enumerate}
+  \end{block}
+
+  \vspace{-1mm}
+
+  \begin{block}{Informal cost analysis}
+    \begin{itemize}
+    \item To have enough points \blue{$\;\euler(p^k) > 4\ell$}, then
+      $\;[\U_k:\K] \sim$ \blue{$p^k \sim \ell$}.
+    \item Step 1 is easy, step 2 costs \blue{$O(p^k)$}
+      operations in the tower.
+    \item Step 3 requires factorisation in $\U_k$. Cost is
+      \alt<2>{\alert{$O(p^{3k})$}}{\blue{$O(p^{3k})$}} by linear
+      algebra.
+    \item Steps 4.1 and 4.2 have to be repeated
+      \alt<2>{\alert{$\euler(p^k)$}}{\blue{$\euler(p^k)$}} times.
+    \item Step 4.1 interpolates a polynomial of degree
+      \blue{$\euler(p^k)$} in a field of degree \blue{$p^{k-1}$}. That
+      is \alt<2>{\alert{$O(p^{2k})$}}{\blue{$O(p^{2k})$}} by fast
+      techniques.  Step 4.2 is some GCDs in $\K$, costs
+      \blue{$O(p^k)$}.
+    \item<2> Total cost is \blue{$\;O(p^{3k}) = O(\ell^3)$}.
+    \end{itemize}
+  \end{block}
+  
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Improving the isomorphism}
+
+  \vspace{-1mm}
+
+  \begin{block}{Couveignes' algorithm}
+    \begin{enumerate}
+    \item Compute a $p$-torsion point of $E$,
+    \item repeatedly apply Voloch formulae to compute $P$, a $p^k$-torsion
+      point of $E$,
+    \item \alert<1>{do the same to compute $P'$, a $p^k$-torsion point
+      of $E'$,}
+    \item for $i \in [1,\dots,p^k-1]$, $i$ prime to $p$
+      \begin{enumerate}
+      \item interpolate the polynomial that sends $P$ over $[i]P'$,
+      \item deduce a rational fraction and check if its denominator is
+        a square.
+      \end{enumerate}
+    \end{enumerate}
+  \end{block}
+
+  \vspace{-1mm}
+
+  \begin{block}{Informal cost analysis}
+    \begin{itemize}
+    \item<0> To have enough points \blue{$\;\euler(p^k) > 4\ell$}, then
+      $\;[\U_k:\K] \sim$ \blue{$p^k \sim \ell$}.
+    \item<0> Step 1 is easy, step 2 costs \blue{$O(p^k)$}
+      operations in the tower.
+    \item<1> \alert{Step 3 requires factorisation in $\U_k$. Cost is
+      \blue{$O(p^{3k})$} by linear algebra.}
+    \item<1> \cite{Couveignes00} gives an algorithm with cost
+      \blue{$O(p^k)$} operations in the tower.
+    \item<0> Step 4.1 interpolates a polynomial of degree
+      \blue{$\euler(p^k)$} in a field of degree \blue{$p^{k-1}$}. That
+      is \blue{$O(p^{2k})$} by fast techniques.  Step 4.2 is some GCDs
+      in $\K$, costs \blue{$O(p^k)$}.
+    \item<0> Total cost is \blue{$\;O(p^{3k}) = O(\ell^3)$}.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Artin-Schreier towers}
+
+  \begin{definition}[Artin-Schreier polynomial]
+    $\K$ a field of characteristic $p$, $\alpha\in\K$
+    \[X^p - X - \alpha\]
+    is an Artin-Schreier polynomial.
+  \end{definition}
+  
+  \begin{theorem}
+    $\K$ finite. $X^p - X - \alpha$ irreducible $\Leftrightarrow \;
+    \Tr_{\K/\F_p}(\alpha) \ne 0$.\\ If $\eta\in\K$ is a root, then $\eta
+    + 1, \ldots, \eta + (p-1)$ are roots.
+  \end{theorem}
+  
+  \begin{definition}[Artin-Schreier extension]
+    $\AS{P}$ an irreducible Artin-Schreier polynomial. 
+    \[\LK = \K[X]/\AS{P}(X) \text{.}\]
+    $\LK/\K$ is called an Artin-Schreier extension.
+  \end{definition}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Artin-Schreier towers}
+
+  \begin{columns}
+    \begin{column}{0.3\textwidth}
+      \Large\[\xymatrix{
+        *+[r]{\U_k = \frac{\U_{k-1}[X_k]}{P_{k-1}(X_k)}}\ar@{-}[d]^p\\
+        *+[r]{\U_{k-1}} \ar@{--}[dd]\\
+        \\
+        *+[r]{\U_{i_0+1} = \frac{\U_0[X_1]}{P_0(X_1)}} \ar@{-}[d]^p\\
+        *+[r]{\U_{i_0} = \K = \frac{\F_p[X_0]}{Q(X_0)}}
+      }\]
+    \end{column}
+    \begin{column}{0.65\textwidth}
+      \begin{block}{Towers over finite fields}
+        \smallskip
+        \begin{center}
+          \Large$P_i = X^p - X - \alpha_i$
+        \end{center}
+
+        \begin{center}
+          We say that $(\U_0,\ldots,\U_k)$ is defined by
+          $(\alpha_0,\ldots,\alpha_{k-1})$ over $\U_0$.
+        \end{center}
+        \begin{center}
+          \alert{ANY} separable extension of degree $p$ can be
+          expressed this way
+        \end{center}
+      \end{block}
+
+      \begin{block}{Voloch formulae}
+        Remark that Voloch formulae give rise to an Artin-Schreier
+        tower:
+        \[X^p - X = \frac{\sqrt[p]{y_P\beta(x_p)}}{h}\]
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Solving Artin-Schreier equations in Artin-Schreier towers}
+
+  \begin{columns}
+    \begin{column}{0.1\textwidth}
+      \Large\[\xymatrix{
+        \U_k\ar@{-}[d]\\
+        \U_{k-1} \ar@{--}[dd]\\
+        \\
+        \U_1 \ar@{-}[d]\\
+        \U_0
+      }\]
+    \end{column}
+    \begin{column}{0.75\textwidth}
+      \begin{block}{\cite{Couveignes00}}
         \begin{itemize}
-        \item Interpolation of degree $p^k$ in $\U_k$ costs
-          $\tildO(p^k)$ operations in $\U_k$,
-        \item that is $\tildO(p^{2k}\log q)$ operations in $\F_p$, to
-          be repeated $O(\euler(p^k))$ times. Total complexity is
-          $\tildO(\ell^3)$.
+        \item Given $\;\alpha_i\in\U_i\;$ with $\;\Tr(\alpha)=0\;$ solves
+          \[X^p-X=\alpha_i\in\U_i\text{.}\]
+        \item By a change of variables, this is equivalent to solve
+          \[X^p-X=\beta_i\in\U_{i-1}\text{.}\]
+        \item Applies the formula recursively. Complexity is
+          \blue{$O(p^i)$}.
+        \end{itemize}
+      \end{block}
+
+      \begin{block}{Isomorphisms of Artin-Schreier towers}
+        \begin{itemize}
+        \item Equivalently, the algorithm finds an isomorphisms
+          between $(\U_0,\ldots,\U_k)$ and the tower defined by
+          $(\alpha_0,\ldots,\alpha_{k-1})$.
+        \item If there were a third tower $(\LK_0,\ldots,\LK_k)$ with
+          fast arithmetics\dots
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.1\textwidth}
+      \Large\[\xymatrix{
+        \U_k'\ar@{-}[d]\\
+        \U_{k-1}' \ar@{--}[dd]\\
+        \\
+        \U_1' \ar@{-}[d]\\
+        \U_0'
+      }\]
+    \end{column}
+  \end{columns}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Solving Artin-Schreier equations in Artin-Schreier towers}
+
+  \Large\[\xymatrix{
+    \U_k \ar@{-}[d]\ar[r]      & \LK_k \ar@{-}[d]      & \U_k' \ar@{-}[d]\ar[l]\\
+    \U_{k-1} \ar@{--}[dd]\ar[r] & \LK_{k-1} \ar@{--}[dd] & \U_{k-1}' \ar@{--}[dd]\ar[l]\\
+    \\
+    \U_1 \ar@{-}[dr]\ar[r]     & \LK_1 \ar@{-}[d]      & \U_1' \ar@{-}[dl]\ar[l]\\
+                         &\U_0=\LK_0=\U_0'
+  }\]
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Improving the arithmetics}
+
+  \vspace{-1mm}
+
+  \begin{block}{Couveignes' algorithm}
+    \begin{enumerate}
+    \item Compute a $p$-torsion point of $E$,
+    \item repeatedly apply Voloch formulae to compute $P$, a $p^k$-torsion
+      point of $E$,
+    \item do the same to compute $P'$, a $p^k$-torsion point
+      of $E'$,
+    \item for $i \in [1,\dots,p^k-1]$, $i$ prime to $p$
+      \begin{enumerate}
+      \item interpolate the polynomial that sends $P$ over $[i]P'$,
+      \item deduce a rational fraction and check if its denominator is
+        a square.
+      \end{enumerate}
+    \end{enumerate}
+  \end{block}
+
+  \vspace{-1mm}
+
+  \begin{block}{\alert<2>{Informal} cost analysis}
+    \begin{itemize}
+    \item To have enough points \blue{$\;\euler(p^k) > 4\ell$}, then
+      $\;[\U_k:\K] \sim$ \blue{$p^k \sim \ell$}.
+    \item Step 1 is easy, step 2 costs \blue{$O(p^k)$}
+      \alert<2>{operations in the tower}.
+    \item \alert<1>{Step 3 requires factorisation in $\U_k$. Cost is
+      \blue{$O(p^{k})$} \alert<2>{ops} by \cite{Couveignes00}.}
+    \item Steps 4.1 and 4.2 have to be repeated
+      \blue{$\euler(p^k)$} times.
+    \item Step 4.1 interpolates a polynomial of degree
+      \blue{$\euler(p^k)$} in a field of degree \blue{$p^{k-1}$}. That
+      is \blue{$O(p^{2k})$} \alert<2>{operations}. Step 4.2 is some GCDs
+      in $\K$, costs \blue{$O(p^k)$} \alert<2>{ops}.
+    \item \uncover<2>{\alert{But how much does it cost \emph{one operation}?}}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Fast arithmetics in Artin-Schreier towers}
+
+  \begin{columns}
+    \begin{column}{0.1\textwidth}
+      \Large\[\xymatrix{
+        \U_k\ar@{-}[d]\\
+        \U_{k-1} \ar@{--}[dd]\\
+        \\
+        \U_1 \ar@{-}[d]\\
+        \U_0
+      }\]
+    \end{column}
+    \begin{column}{0.85\textwidth}
+      \vspace{-3mm}
+      \begin{block}{Primitive towers (\cite{DFS09})}
+        \begin{itemize}
+        \item Find special $(\gamma_0,\ldots,\gamma_{k-1})$ that
+          define a tower s.t. $\LK_i = \F_p[x_i]$, where
+          $\;x_i^p-x_i-\gamma_{i-1}=0$.
+        \item Use univariate representation over $\F_p$ to perform
+          fast arithmetics (FFT multiplication, Newton inversion,
+          etc.).
+        \item Use \cite{Couveignes00} algorithm to move to
+          $(\U_0,\ldots,\U_k)$.
         \end{itemize}
       \end{block}
       
+      \vspace{-3mm}
+      \begin{block}{Level embedding (\cite{DFS09})}
+        \begin{itemize}
+        \item Express the morphisms between the levels to switch back
+          to the multivariate representation.
+        \item Going down is easy: bivariate reduction modulo
+          $X_i^p-X_i-\gamma_{i-1}$.
+        \item Going up much harder: trace formulae, truncated power
+          series arithmetics, transposition principle.
+        \end{itemize}
+      \end{block}
+
+      \vspace{-3mm}
+      \begin{block}{Advertisement: \texttt{FAAST}}
+        Download this \texttt{C++} library at:
+        \blue{\url{http://www.lix.polytechnique.fr/Labo/Luca.De-Feo/FAAST}}
+      \end{block}
     \end{column}
   \end{columns}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Improving the interpolation}
+
+  \vspace{-2mm}
+
+  \begin{block}{Couveignes' algorithm}
+    \begin{enumerate}
+    \item Compute a $p$-torsion point of $E$,
+    \item repeatedly apply Voloch formulae to compute $P$, a $p^k$-torsion
+      point of $E$,
+    \item do the same to compute $P'$, a $p^k$-torsion point
+      of $E'$,
+    \item for $i \in [1,\dots,p^k-1]$, $i$ prime to $p$
+      \begin{enumerate}
+      \item interpolate the polynomial that sends $P$ over $[i]P'$,
+      \item deduce a rational fraction and check if its denominator is
+        a square.
+      \end{enumerate}
+    \end{enumerate}
+  \end{block}
+
+  \vspace{-2mm}
+
+  \begin{block}{Formal cost analysis}
+    \begin{itemize}
+    \item To have enough points \blue{$\;\euler(p^k) > 4\ell$}, then
+      $\;[\U_k:\K] \sim$ \blue{$p^k \sim \ell$}.
+    \item Step 1 is easy, step 2 costs \blue{$O(p^k\log_pq)$}
+      operations .
+    \item Step 3 requires factorisation in $\U_k$. Cost is
+      \blue{$O(p^{k}\log_p^2q + \log_p^3q)$}.
+    \item Steps 4.1 and 4.2 have to be repeated
+      \blue{$\euler(p^k)$} times.
+    \item Step 4.1 interpolates a polynomial of degree
+      \blue{$\euler(p^k)$} in a field of degree \blue{$p^{k-1}$}. That
+      is
+      \alt<2>{\alert{$O(p^{2k}\log_pq)$}}{\blue{$O(p^{2k}\log_pq)$}}. Step
+      4.2 is some GCDs in $\K$, costs \blue{$O(p^k\log_pq)$}.
+    \item \alert<1>{All costs in $\F_p$-operations.}
+    \end{itemize}
+  \end{block}
 \end{frame}
 
 %%
@@ -487,6 +858,48 @@
   \end{block}
 \end{frame}
 
+%%
+
+\begin{frame}
+  \frametitle{Summarizing}
+
+  \vspace{-2mm}
+
+  \begin{block}{Couveignes' algorithm}
+    \begin{enumerate}
+    \item Compute a $p$-torsion point of $E$,
+    \item repeatedly apply Voloch formulae to compute $P$, a $p^k$-torsion
+      point of $E$,
+    \item do the same to compute $P'$, a $p^k$-torsion point
+      of $E'$,
+    \item for $i \in [1,\dots,p^k-1]$, $i$ prime to $p$
+      \begin{enumerate}
+      \item interpolate the polynomial that sends $P$ over $[i]P'$,
+      \item deduce a rational fraction and check if its denominator is
+        a square.
+      \end{enumerate}
+    \end{enumerate}
+  \end{block}
+
+  \vspace{-2mm}
+
+  \begin{block}{Formal cost analysis}
+    \begin{itemize}
+    \item To have enough points \blue{$\;\euler(p^k) > 4\ell$}, then
+      $\;[\U_k:\K] \sim$ \blue{$p^k \sim \ell$}.
+    \item Step 1 is easy, step 2 costs \blue{$O(p^k\log_pq)$}
+      operations .
+    \item Step 3 requires factorisation in $\U_k$. Cost is
+      \blue{$O(p^{k}\log_p^2q + \log_p^3q)$}.
+    \item Steps 4.1 and 4.2 have to be repeated
+      \blue{$\euler(p^k)$} times.
+    \item Step 4.1 costs \alert{$O(p^k\log_pq)$} using the latter
+      algorithm. Step 4.2 is some GCDs in $\K$, costs
+      \blue{$O(p^k\log_pq)$}.
+    \item Total cost is \blue{$\;O(\ell^2\log_pq + \ell\log_p^2q + \log_p^3q)$}.
+    \end{itemize}
+  \end{block}
+\end{frame}
 
 %%
 
@@ -524,40 +937,36 @@
 
 %%
 
+\section{Benchmarks}
+
 \begin{frame}
-  \frametitle{Effective Artin-Schreier towers (D.F., Schost '09)}
+  \frametitle{(Old) Timings}
 
   \begin{columns}
-    \begin{column}{0.1\textwidth}
-      \Large\[\xymatrix{
-        \U_k\ar@{-}[d]\\
-        \U_{k-1} \ar@{--}[dd]\\
-        \\
-        \U_1 \ar@{-}[d]\\
-        \U_0
-      }\]
+    \begin{column}{0.4\textwidth}
+      \begin{itemize}
+      \item \texttt{Magma} implementation,
+      \item \cite{Cou96} vs. \cite{DF07},
+      \item $\K = \F_{5^3}$.
+      \end{itemize}
     \end{column}
-    \begin{column}{0.85\textwidth}
-      \vspace{-3mm}
-      \begin{block}{Primitive towers}
-        \begin{itemize}
-        \item Find special \emph{primitive} Artin-Schreier towers
-          s.t. the generator of $\U_i/\U_{i-1}$ is also a generator of
-          $\U_i/\F_p$.
-        \item Use univariate representation over $\F_p$ to perform
-          fast arithmetics (FFT multiplication, Newton inversion,
-          etc.).
-        \item Use fast isomorphisms to treat generic towers of
-          extensions.
-        \end{itemize}
-      \end{block}
-      
-      \begin{block}{Level embedding}
-        \begin{itemize}
-        \item Move up and down in the structure,
-        \item Effective frobenius maps.
-        \end{itemize}
-      \end{block}
+    \begin{column}{0.6\textwidth}
+      \includegraphics[width=\textwidth]{5}
+
+      \smallskip
+      \footnotesize
+      \centering
+      \begin{tabular}{|l|r|r|}
+        \hline
+        & [Cou'96] & \cite{DF07}\\
+        \hline
+        
+        Total time           &  $65951$ & $19864$\\
+        Compute $E[p^k]$    &           $0,06$\% & $0,5$\%\\
+        Compute $E'[p^k]$   &             $28$\% & $89,5$\%\\
+        Interpolation &             $71$\% & $9,5$\%\\
+        \hline
+      \end{tabular}
     \end{column}
   \end{columns}
 \end{frame}
@@ -565,32 +974,20 @@
 %%
 
 \begin{frame}
-  \frametitle{Implementation}
+  \frametitle{Timings}
 
-  \begin{itemize}
-  \item Implementation in C++ with NTL.
-  \item Porting code to SAGE.
-  \item Some parts of the code are distributed already, if you can't
-    wait:
-    \blue{\url{http://www.lix.polytechnique.fr/Labo/Luca.De-Feo/FAAST}}
-  \end{itemize}
-\end{frame}
-
-%%
-
-\begin{frame}
-  \frametitle{Benchmarks}
-
+  
   \begin{columns}
     \begin{column}{0.4\textwidth}
       \begin{itemize}
-      \item \texttt{NTL} implemantation vs.  \texttt{Magma}
-        implementation (no fast Galois groups)
+      \item \texttt{NTL} implemantation of \cite{DFS09} vs.  \texttt{Magma}
+        implementation, of \cite{Couveignes00}
       \item $\K = \F_{2^{101}}$.
       \end{itemize}
     \end{column}
     \begin{column}{0.6\textwidth}
-      \includegraphics[width=\textwidth]{2-101}
+      \alt<2>{\includegraphics[width=\textwidth]{5+2-101}}
+             {\includegraphics[width=\textwidth]{2-101}}
 
     \end{column}
   \end{columns}
@@ -614,18 +1011,19 @@
 %%
 
 \begin{frame}
-  \frametitle{Benchmarks}
+  \frametitle{Timings}
 
   
   \begin{columns}
     \begin{column}{0.4\textwidth}
       \begin{itemize}
-      \item \texttt{NTL} implemantation
+      \item \texttt{NTL} implemantation of \cite{DFS09}
       \item $\K = \F_{3^{64}}$.
       \end{itemize}
     \end{column}
     \begin{column}{0.6\textwidth}
-      \includegraphics[width=\textwidth]{3-64}
+      \alt<2>{\includegraphics[width=\textwidth]{5+3-64}}
+             {\includegraphics[width=\textwidth]{3-64}}
 
     \end{column}
   \end{columns}
@@ -655,7 +1053,7 @@
   \begin{columns}
     \begin{column}{0.4\textwidth}
       \begin{itemize}
-      \item \texttt{NTL} implemantation
+      \item \texttt{NTL} implemantation of \cite{DFS09}
       \item $\K = \F_{2^{1023}}$.
       \end{itemize}
     \end{column}
@@ -679,6 +1077,39 @@
     397 & 931.022 & 931.610 & 313.609 & 3.1819 & 6.73608 & 1024 & 10156.011 \\
     \hline
   \end{tabular}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Ongoing work}
+
+  \begin{block}{Implementation (with F. Morain and E. Schost)}
+    \begin{itemize}
+    \item \texttt{SAGE} porting of \texttt{FAAST},
+    \item \texttt{SAGE} porting of SEA + Lercier + Couveignes II,
+    \item comparison with Lercier,
+    \item comparison with Lercier-Sirvent.
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Theory}
+    \begin{itemize}
+    \item Try a $p$-adic version of Couveignes II + BMSS08 to reduce
+      the number of tries in the final loop,
+    \item Improve Lercier-Sirvent and make it the best algorithm for
+      this problem.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \begin{center}
+    \Large
+    \textbf{Thanks}
+  \end{center}
 \end{frame}
 
 %%
@@ -749,7 +1180,7 @@
 
   \bibitem[D.F., Schost '09]{DFS09} L.~De~Feo \& É.~Schost.  \newblock
     Fast arithmetics in Artin-Schreier towers over finite fields.
-    \newblock \emph{Preprint}, 2009.
+    \newblock \emph{ISSAC '09}, 2009.
 
   \bibitem[Gallant, Lambert, Vanstone '01]{GLV}
     R.P.~Gallant, R.J.~Lambert \& S.A.~Vanstone.
