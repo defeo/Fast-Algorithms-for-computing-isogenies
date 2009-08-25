@@ -350,27 +350,7 @@
 %%
 
 \begin{frame}
-  \frametitle{Using the $p$-torsion}
-
-  \begin{block}{Other algorithms}
-    \begin{itemize}
-    \item['94] Couveignes I \hfill $O(\ell^3)$
-    \item['96] $p=2$, Lercier \hfill $\Omega(\ell^3)$ ?
-    \item['96] Couveignes II (+ D.F.) \hfill $\tildO(\ell^2)$
-    \end{itemize}
-  \end{block}
-  
-  \begin{block}{Couveignes I}
-    \begin{itemize}
-    \item Use formal groups to develop at infinity.
-    \end{itemize}
-  \end{block}
-\end{frame}
-
-%%
-
-\begin{frame}
-  \frametitle{Using the $p$-torsion}
+  \frametitle{The small characteristic case}
 
   \begin{block}{Other algorithms}
     \begin{itemize}
@@ -380,13 +360,23 @@
     \end{itemize}
   \end{block}
   
-  \begin{block}{Couveignes II}
-    \begin{itemize}
-    \item Exploits the cyclic structure of the $p^k$-torsion,
-    \item interpolates a polynomial over $E[p^k]$,
-    \item reconstructs a rational fraction and tests if it is an isogeny.
-    \item Uses fast computer algebra techniques.
-    \end{itemize}
+  \begin{block}{Couveignes I\only<2>{I}}
+    \begin{overprint}
+      \onslide<1>
+      \begin{itemize}
+      \item Uses formal groups parametrization in place of Weierstrass functions,
+      \item computes all the possible morphisms of formal groups up to a bounded precision,
+      \item reconstructs a rational fraction and tests if it is an isogeny.
+      \end{itemize}
+ 
+      \onslide<2>
+      \begin{itemize}
+      \item Exploits the cyclic structure of the $p^k$-torsion,
+      \item interpolates a polynomial over $E[p^k]$,
+      \item reconstructs a rational fraction and tests if it is an isogeny.
+      \item Uses fast computer algebra techniques.
+      \end{itemize}
+    \end{overprint}
   \end{block}
 \end{frame}
 
@@ -518,7 +508,7 @@
       \blue{$O(p^k)$} operations in the tower.
     \item<0> Step 4.1 interpolates a polynomial of degree
       \blue{$\euler(p^k)$} in a field of degree \blue{$p^{k-1}$}. That
-      is \blue{$O(p^{2k})$} by fast techniques.  Step 4.2 is some GCDs
+      is \blue{$O(p^{2k})$} at best.  Step 4.2 is some GCDs
       in $\F_q$, costs \blue{$O(p^k)$}.
     \item<0> Total cost is \blue{$\;O(p^{3k}) = O(\ell^3)$}.
     \end{itemize}
@@ -782,17 +772,17 @@
   \vspace{-3mm}
   
   \begin{block}{Lagrange formula}
-      \centering
-      \begin{onlyenv}<1-5>
-      \begin{equation*}
-        \only<1>{A(X) = \sum_{i=1}^nv_i\frac{T(X)}{X-v_i}\prod_{j\ne
-            i}\frac{1}{v_i-v_j}} \only<2>{A(X) =
-          \sum_{i=1}^n\frac{s_i}{T'(v_i)}\cdot\frac{T(X)}{X-v_i}}
-        \only<3>{A_1(X) = \frac{s_1}{T'(v_1)(X-v_2)}+\frac{s_2}{T'(v_2)(X-v_1)}}
-        \only<4>{A_2(X) = \frac{s_3}{T'(v_3)(X-v_4)}+\frac{s_4}{T'(v_4)(X-v_3)}}
+    \begin{overlayarea}{\textwidth}{1cm}
+      \only<1-5>{$
+        \only<1>{A(X) = \sum\limits_{i=1}^nv_i\dfrac{T(X)}{X-v_i}\prod\limits_{j\ne
+            i}\dfrac{1}{v_i-v_j}}
+        \only<2>{A(X) =
+          \sum\limits_{i=1}^n\dfrac{s_i}{T'(v_i)}\cdot\dfrac{T(X)}{X-v_i}}
+        \only<3>{A_1(X) = \dfrac{s_1}{T'(v_1)(X-v_2)}+\dfrac{s_2}{T'(v_2)(X-v_1)}}
+        \only<4>{A_2(X) = \dfrac{s_3}{T'(v_3)(X-v_4)}+\dfrac{s_4}{T'(v_4)(X-v_3)}}
         \only<5>{A(X) = T_2(X)A_1(X) + T_1(X)A_2(X)}
-      \end{equation*}
-      \end{onlyenv}
+      $}
+      \centering
       \only<6>{Complexity $\tildO(n)$ operations in the coefficient
         ring.}  \only<7>{Let now $v\in\U_2$,
         $\sigma\in\Gal(\U_2/\U_0)$ and
@@ -800,9 +790,11 @@
         $T_1',T_2'\in\U_1[X]$ and $T\in\U_0[X]$.}  \only<8-9>{For a
         polynomial $P$ note $P^\sigma$ the action on the coefficients
         of $P$, then} \only<10>{Complexity $\tildO(n)$ operations in $\U_0$.}
+    \end{overlayarea}
   \end{block}
 
   \begin{block}<2->{Interpolation by chinese remindering}
+    \begin{overlayarea}{\textwidth}{2.5cm}
     \centering
     \begin{tikzpicture}
       \begin{scope}
@@ -821,6 +813,7 @@
         };
       \end{scope}
     \end{tikzpicture}
+    \end{overlayarea}
   \end{block}
 \end{frame}
 
@@ -877,7 +870,7 @@
     \item We need $O(p^k)$ interpolations, each sending $P\in E[p^k]$
       over $Q\in E'[p^k]$,
     \item $Q,R\in E'[p^k]$ are conjugates tied by the relation
-      $Q=\frob_q^i(P)$ for some $i$.
+      $Q=\frob^i(P)$ for some $i$.
     \end{itemize}
   \end{block}
 
@@ -912,7 +905,7 @@
     \begin{column}{0.4\textwidth}
       \begin{itemize}
       \item \texttt{Magma} implementation,
-      \item \cite{Cou96} vs. \cite{DF07},
+      \item \cite{Cou96} vs. Fast Interpolation (\cite{DF07}),
       \item $\F_q = \F_{5^3}$.
       \end{itemize}
     \end{column}
