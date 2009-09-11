@@ -1,0 +1,133 @@
+\documentclass[]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{bbm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{mdwlist}
+\usepackage{graphicx}
+\usepackage{mathrsfs}
+\usepackage{url}
+\usepackage{color}
+
+%%\usepackage[pdftex,plainpages=false]{hyperref}
+%%\usepackage[pdftex]{color,graphicx}
+%%\usepackage{ifthen}
+%%\usepackage[all]{xy}
+
+%% Stuff
+\renewcommand{\le}{\leqslant}
+\renewcommand{\ge}{\geqslant}  % comme François le demande...
+%% Algèbre
+\newcommand{\trans}[1]{#1^\top}  % transposé
+\newcommand{\dual}[1]{#1^\ast}  % dual
+\newcommand{\clot}[1]{\bar{#1}}  % clôture algèbrique
+\newcommand{\card}[1]{\# #1}  % cardinalité d'un ensemble
+\DeclareMathOperator{\car}{car}  % caractéristique d'un corps
+\DeclareMathOperator{\Frac}{Frac}  % corps des fractions
+\newcommand{\N}{\mathbb{N}}  % les naturels
+\newcommand{\Z}{\mathbb{Z}}  % les entiers
+\newcommand{\K}{\mathbb{K}}  % un corps
+\newcommand{\LK}{\mathbb{L}}  % encore un corps
+\newcommand{\U}{\mathbb{U}}  % encore un corps
+\newcommand{\F}{\mathbb{F}}  % un corps fini
+\newcommand{\Q}{\mathbb{Q}}  % les rationnels
+\newcommand{\R}{\mathbb{R}}  % les réels
+\newcommand{\C}{\mathbb{C}}  % les complexes
+\newcommand{\isom}{\cong}  % isomorphisme de corps
+\newcommand{\frob}{\varphi}  % fröbenius
+\DeclareMathOperator{\Gal}{Gal}  % groupe de Galois
+\DeclareMathOperator{\Tr}{Tr}  % trace
+\DeclareMathOperator{\PTr}{T}  % pseudotrace
+\DeclareMathOperator{\Norm}{N} % norme
+\DeclareMathOperator{\coeff}{coeff}  % coefficient
+\newcommand{\res}{\rho}  % the residue form
+\newcommand{\euler}{\phi}  % indicatrice d'Euler
+\DeclareMathOperator{\ord}{ord}  % l'ordre d'un élément
+\DeclareMathOperator{\rev}{rev}  % le reverse d'un polynôme
+\newcommand{\Cyclo}{\Phi}  % le polynome cyclotomique
+\DeclareMathOperator{\Fix}{Fix}  % les points fixes
+%% Courbes
+\newcommand{\Proj}{\mathbb{P}}  % espace projectif
+\newcommand{\0}{\mathcal{O}}  % point de base d'une courbe
+\newcommand{\ecpoint}[3]{[#1:#2:#3]}  % un point d'une courbe
+\newcommand{\isog}[1]{\mathcal{#1}}  % la police des isogénies
+\newcommand{\I}{\isog{I}}  % une isogénie I
+\newcommand{\Hasse}{H}  % l'invariant de Hasse
+\newcommand{\divpol}{f}  % polynôme de division
+%% Autre
+\newcommand{\tildO}{\tilde{O}}  % la notation O~ qui oublie les log
+\newcommand{\Mult}{\mathrm{\sf M}}  % fonction de multiplication
+\newcommand{\ModComp}{\mathrm{\sf C}}  % fonction de composition modulaire
+\newcommand{\alg}[1]{{\sf #1}}  % la police des algorithmes
+\newcommand{\algref}[1]{\alg{\ref{#1}}}  % la police des algorithmes
+\newcommand{\wrt}{\dashv}  % appartenance forte, a\wrt A signifie que a est représenté comme un élément de A
+\newcommand{\ndiv}{\nmid}  % ne divise pas
+
+
+%%Théorèmes
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{corollary}[definition]{Corollary}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{remark}[definition]{Remark}
+
+\def\myproof{\vspace{-\parsep}\penalty-51\noindent{\sc Proof.}~}
+\def\foorp{\hfill$\square$}
+
+
+\newenvironment{example}[1][]{\begin{flushleft}\noindent\begin{minipage}{\textwidth}
+    \textbf{Example\ifthenelse{\equal{#1}{}}
+      {}
+      { (#1)}~}
+}{\end{minipage}\end{flushleft}}
+
+
+\newenvironment{algorithm}[3]{\small\begin{center}\begin{minipage}{0.48\textwidth}
+      \sf
+      \rule{\textwidth}{0.2pt}\\
+      \makebox[\textwidth][c]{\textbf{#1}}\\
+      \rule[0.5\baselineskip]{\textwidth}{0.2pt}\\
+
+      \vspace{-15pt}
+
+      \parbox{\textwidth}{\textbf{Input} #2}
+      \parbox{\textwidth}{\textbf{Output} #3}
+
+      \vspace{-7pt}
+
+      \begin{enumerate*}}{\end{enumerate*}
+      \vspace{-11pt}
+      \rule{\textwidth}{0.2pt}
+  \end{minipage}\end{center}
+}
+
+
+\begin{document}
+
+\title{Fast algorithms for computing isogenies between elliptic curves
+  in small characteristic}
+\author{Luca De Feo\footnote{LIX, {\'E}cole
+Polytechnique, 91128 Palaiseau, France}}
+
+\maketitle
+\begin{abstract}
+  We improve Couveignes' algorithm \cite{Cou96}.
+\end{abstract}
+
+%\input{introduction}
+\input{biblio}
+
+\end{document}
+
+
+% Local Variables:
+% mode:flyspell
+% ispell-local-dictionary:"british"
+% End:
+%
+% LocalWords:  Schreier Artin pseudotrace frobenius bivariate memoization
+% LocalWords:  Couveignes isogenies
