@@ -1,0 +1,43 @@
+\section{Preliminaries on Isogenies}
+
+Let $E$ be an ordinary elliptic curve over the field $\F_q$, we
+suppose it is given to us as the locus of zeroes of a Weierstrass
+equation
+\[y^2 + a_1xy + a_3y = x^3 + a_2x^2 + a_4x + a_6
+\qquad a_1,\ldots,a_6\in\F_q\text{.}\]
+
+\paragraph{Simplified forms} If $p>3$ it is well known that the curve
+$E$ is isomorphic to a curve in the form
+\begin{equation}
+  \label{eq:weierstrass>3}
+  y^2 = x^3 + ax + b
+\end{equation}
+and its $j$-invariant is $j(E) = \frac{1728(4a)^3}{16(4a^3 + 27b^2)}$.
+
+When $p=3$, since $E$ is ordinary, it is isomorphic to a curve
+\begin{equation}
+  \label{eq:weierstrass=3}
+  y^2 = x^3 + ax^2 + b
+\end{equation}
+and its $j$-invariant is $j(E) = -\frac{a^3}{b}$.
+
+Finally, when $p=2$, since $E$ is ordinary, it is isomorphic to a curve
+\begin{equation}
+  \label{eq:weierstrass=2}
+  y^2 + xy = x^3 + ax^2 + b
+\end{equation}
+and its $j$-invariant is $j(E) = \frac{1}{b}$.
+
+These isomorphism are easy to compute and we will always assume that
+the elliptic curves given to our algorithms are in such simplified
+forms.
+
+
+% Local Variables:
+% mode:flyspell
+% ispell-local-dictionary:"british"
+% End:
+%
+% LocalWords:  Schreier Artin pseudotrace frobenius bivariate Joux Sirvent FFT
+% LocalWords:  Couveignes isogenies Schoof isogeny cryptosystems Lercier
+% LocalWords:  precomputation arithmetics polylogarithmic Karatsuba
