@@ -10,10 +10,10 @@ new quasi-optimal algorithm; however, all the algorithms presented in
 Weierstrass functions of the curves up to a certain precision, thus
 they are limited to the case $\ell\ll p$ where $p$ is the
 characteristic of $\F_q$. This is satisfactory for cryptographic
-applications where one takes $p=q$ or $p=2$, indeed in the former case
+applications where one takes $p=q$ or $p=2$; indeed in the former case
 Schoof's algorithm needs $\ell\in O(\log p)$, while in the latter case
-$p$-adic methods based on \cite{Sat00} are preferred to Schoof's
-algorithm.
+there's no need to compute explicit isogenies since $p$-adic methods
+based on \cite{Sat00} are preferred to Schoof's algorithm.
 
 Nevertheless, the problem of computing explicit isogenies in the case
 where $p$ is small compared to $\ell$ stays of theoretical interest
@@ -25,19 +25,19 @@ constant, however it has an exponential complexity in $\log
 p$. Another algorithm by Lercier specific to $p=2$ uses some linear
 properties of the problem to build a linear system from whose solution
 the isogeny can be deduced \cite{Ler96}; its complexity is conjectured
-to be $\tildO(\ell^3\log q)$ operations in $\F_p$, but with a much
-better constant factor than \cite{Cou94}. At the present moment the
+to be $\tildO(\ell^3\log q)$ operations in $\F_p$, but it has a much
+better constant factor than \cite{Cou94}. At the moment we write the
 latter algorithm is by many orders of magnitude the fastest algorithm
 to solve practical instances of the problem when $p=2$, thus being the
 \emph{de facto} standard for cryptographic use.
 
-$p$-adic methods have been used to solve the isogeny problem by Joux
-and Lercier \cite{JL06} and Lercier and Sirvent \cite{LeSi09}. The
-former method has complexity $\tildO(\ell^2(1 + \ell/p)\log q)$
-operations in $\F_p$, which makes it well adapted to the case where
-$p\sim\log q$. The latter has complexity $\tildO(\ell^3 + \ell\log
-q^2)$ operations in $\F_p$, making it the best algorithm to our
-knowledge for the case where $p$ is not constant.
+$p$-adic methods were used by Joux and Lercier \cite{JL06} and Lercier
+and Sirvent \cite{LeSi09} to solve the isogeny problem. The former
+method has complexity $\tildO(\ell^2(1 + \ell/p)\log q)$ operations in
+$\F_p$, which makes it well adapted to the case where $p\sim\log
+q$. The latter has complexity $\tildO(\ell^3 + \ell\log q^2)$
+operations in $\F_p$, making it the best algorithm to our knowledge
+for the case where $p$ is not constant.
 
 \paragraph{The algorithm C2 and its variants}
 Finally, the algorithm having the best asymptotic complexity in $\ell$
@@ -67,8 +67,12 @@ $\tildO(\ell^3\log q)$.
 
 The aim of this paper is to give a complete review of Couveignes'
 algorithm and its variants, provide the missing piece to make it have
-a quadratic dependence in $\ell$ and prove the accurate complexity
-estimate of $\tildO()$ operations in $\F_p$. We also \dots
+a quadratic dependency in $\ell$ and prove the accurate complexity
+estimate of $\tildO(\incomplete)$ operations in $\F_p$. In Section
+\ref{sec:} we also extend the algorithm beyond its original scope to
+solve the more general problem of \emph{bounded degree isogeny
+finding}; interestingly, this new algorithm turns out to have a better
+asymptotic complexity than any previously known approach.
 
 \paragraph{Notation and plan}
 In the rest of the paper $p$ is a prime, $d$ a positive integer,
@@ -76,7 +80,7 @@ $q=p^d$ and $\F_q$ is the field with $q$ elements. For an elliptic
 curve $E$ and a field $\K$ embedded in an algebraic closure
 $\clot{\K}$, we note by $E(\K)$ the set of $K$-rational points and by
 $E[m]$ the $m$-torsion subgroup of $E(\clot{\K})$. The group law on
-the elliptic curve is noted additively, its zero its the point at
+the elliptic curve is noted additively, its zero is the point at
 infinity, noted $\0$. For an affine point $P$ we note by $x(P)$ its
 abscissa and by $y(P)$ its ordinate. We will restrict ourselves to the
 case of ordinary elliptic curves, thus $E[p^k]\isom\Z/p^k\Z$.
@@ -105,7 +109,8 @@ interpolation\\
 complexity of C2-AS-FI\\
 modular composition\\
 complexity of C2-AS-FI-MC\\
-unknown degree problem?\\
+bounded degree problem\\
+complexity of CBD-AS-FI-MC, comparison to other methods\\
 implementation\\
 benchmarks\\
 
