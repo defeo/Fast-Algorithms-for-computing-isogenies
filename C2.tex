@@ -1,0 +1,76 @@
+\section{The algorithm C2}
+
+The algorithm we refer to as C2 was originally proposed in
+\cite{Cou96}. It takes as input two elliptic curves $E, E'$ and an odd
+prime $\ell$ different from $p$ and it returns, if it exists, an
+$\F_q$-rational isogeny of degree $\ell$ between $E$ and $E'$. It only
+works in odd characteristic.
+
+\paragraph{The idea} Suppose it exists an $F_q$-rational isogeny
+$\I:E\rightarrow E'$ of degree $\ell$. Since $\ell\ne p$ one has
+$\I(E[p^k]) = E'[p^k]$.
+
+Recall that $E[p^k]$ and $E'[p^k]$ are cyclic groups, C2 iteratively
+computes generators $P_k,P_k'$ of $E[p^k]$ and $E'[p^k]$ respectively
+for $k$ large enough. Now C2 makes the guess $\I(P_k) = P_k'$, then if
+$\I$ is given by rational fractions as in \eqref{eq:isog},
+\begin{equation}
+  \label{eq:C2:I}
+  \frac{g\bigl(x([i]P_k)\bigr)}{h\bigl(x([i]P_k)\bigr)} = x([i]P_k')
+  \quad\text{for $i\in(\Z/p^k\Z)^\ast$.} 
+\end{equation}
+
+C2 computes $T_k(X) = \prod_{i\in(\Z/p^k\Z)^\ast}\bigl(X-x([i]P_k)\bigr)$ and
+interpolates the polynomial $A(X)$ such that
+\begin{equation}
+  \label{eq:C2:A}
+  A\bigl(x([i]P_k)\bigr) = x([i]P_k') \quad\text{for $i\in(\Z/p^k\Z)^\ast$,} 
+\end{equation}
+it is then clear that
+\begin{equation}
+  \label{eq:C2:RR}
+  A(X) \equiv \frac{g(X)}{h(X)} \bmod T(X)
+  \text{.}
+\end{equation}
+
+C2 computes the rational fraction $\frac{g(X)}{h(X)}$ through a
+rational function reconstruction algorithm \cite[\incomplete]{vzGG}
+and checks that it corresponds to the restriction of an isogeny to the
+$x$-axis. If it does, the whole isogeny is computed through Vélu
+formulae and the algorithm terminates. If it does not, the guess
+$\I(P_k) = P_k'$ was false; then it computes a new generator for
+$E'[p^k]$ and starts over again.
+
+We now go through the details of the algorithm.
+
+\paragraph{The $p$-torsion}
+The computation of the $p$-torsion points follows from the work of
+Gunji \cite{Gun76}. 
+
+\begin{definition}
+  \label{def:hasse}
+  Let $E$ have equation $y^2 = f(x)$, one defines the \emph{Hasse
+    invariant} of $E$, noted $H_E$ as the coefficient of $X^{p-1}$ in
+  $f(X)^{\frac{p-1}{2}}$.
+\end{definition}
+
+\begin{proposition}
+  Let $c=\sqrt[p-1]{H_E}$, then the $p$-torsion points of $E$ are
+  defined in $\F_q[c]$ and their abscissae are defined in $\F_q[c^2]$.
+\end{proposition}
+
+
+\paragraph{The $p^k$-torsion}
+
+
+% Local Variables:
+% mode:flyspell
+% ispell-local-dictionary:"british"
+% mode:TeX-PDF
+% TeX-master: "ec-isogeny"
+% End:
+%
+% LocalWords:  Schreier Artin pseudotrace frobenius bivariate Joux Sirvent FFT
+% LocalWords:  Couveignes isogenies Schoof isogeny cryptosystems Lercier
+% LocalWords:  precomputation arithmetics polylogarithmic Karatsuba
+% LocalWords:  endomorphisms
