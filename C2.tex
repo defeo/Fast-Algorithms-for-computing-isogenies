@@ -11,35 +11,25 @@ $\I:E\rightarrow E'$ of degree $\ell$. Since $\ell\ne p$ one has
 $\I(E[p^k]) = E'[p^k]$.
 
 Recall that $E[p^k]$ and $E'[p^k]$ are cyclic groups, C2 iteratively
-computes generators $P_k,P_k'$ of $E[p^k]$ and $E'[p^k]$ respectively
-for $k$ large enough. Now C2 makes the guess $\I(P_k) = P_k'$, then if
-$\I$ is given by rational fractions as in \eqref{eq:isog},
+computes generators $P_k,P_k'$ of $E[p^k]$ and $E'[p^k]$
+respectively. Now C2 makes the guess $\I(P_k) = P_k'$, then, if $\I$
+is given by rational fractions as in \eqref{eq:isog},
 \begin{equation}
   \label{eq:C2:I}
   \frac{g\bigl(x([i]P_k)\bigr)}{h\bigl(x([i]P_k)\bigr)} = x([i]P_k')
-  \quad\text{for $i\in(\Z/p^k\Z)^\ast$.} 
+  \quad\text{for $i\in(\Z/p^k\Z)^\ast$} 
 \end{equation}
+and by \eqref{eq:velu-deg} $\deg g = \deg h + 1 = \ell$.
 
-C2 computes $T_k(X) = \prod_{i\in(\Z/p^k\Z)^\ast}\bigl(X-x([i]P_k)\bigr)$ and
-interpolates the polynomial $A(X)$ such that
-\begin{equation}
-  \label{eq:C2:A}
-  A\bigl(x([i]P_k)\bigr) = x([i]P_k') \quad\text{for $i\in(\Z/p^k\Z)^\ast$,} 
-\end{equation}
-it is then clear that
-\begin{equation}
-  \label{eq:C2:RR}
-  A(X) \equiv \frac{g(X)}{h(X)} \bmod T(X)
-  \text{.}
-\end{equation}
-
-C2 computes the rational fraction $\frac{g(X)}{h(X)}$ through a
-rational function reconstruction algorithm \cite[\incomplete]{vzGG}
-and checks that it corresponds to the restriction of an isogeny to the
-$x$-axis. If it does, the whole isogeny is computed through Vélu
-formulae and the algorithm terminates. If it does not, the guess
-$\I(P_k) = P_k'$ was false; then it computes a new generator for
-$E'[p^k]$ and starts over again.
+Observe that having primitive points in $E[p^k]$, using
+\eqref{eq:C2:I} one can compute the rational fraction
+$\frac{g(X)}{h(X)}$ through Cauchy interpolation over such points as
+in \cite[5.7]{vzGG}. C2 takes $\frac{\euler(p^k)}{2} > 2\ell - 1$,
+interpolates the rational fraction and then checks that it corresponds
+to the restriction of an isogeny to the $x$-axis. If this is the case,
+the whole isogeny is computed through Vélu formulae and the algorithm
+terminates.  Otherwise the guess $\I(P_k) = P_k'$ was false; then C2
+computes a new generator for $E'[p^k]$ and starts over again.
 
 We now go through the details of the algorithm.
 
