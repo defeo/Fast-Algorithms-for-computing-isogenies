@@ -58,8 +58,8 @@ isogenies are easily understood as powers of the frobenius map. Let
 \[E^{(p)} : y^2 + a_1^pxy + a_3^py = x^3 + a_2^px^2 + a_4^px + a_6^p\]
 then the map
 \begin{align*}
-  \phi : E &\rightarrow E^{(p)}\\
-         (x,y) &\mapsto (x^p,y^p)
+  \frobisog : E &\rightarrow E^{(p)}\\
+          (x,y) &\mapsto (x^p,y^p)
 \end{align*}
 is a degree $p$ purely inseparable isogeny. Any purely inseparable
 isogeny is a composition of such frobenius isogenies.
@@ -72,7 +72,7 @@ $E'(\clot{\F_q})$ such that the map it defines is an isogeny.
 \begin{figure}
   \centering
   \[\xymatrix{
-    E \ar[r]^{[m]}\ar@/_1pc/[rrr]_{\I'} & E \ar[r]^\I & E' \ar[r]^{\phi^n} & E'^{(p^n)}\\
+    E \ar[r]^{[m]}\ar@/_1pc/[rrr]_{\I'} & E \ar[r]^\I & E' \ar[r]^{\frobisog^n} & E'^{(p^n)}\\
   }\]
   \caption{Factorization of an isogeny. $\I'$ has kernel $E[m]\oplus\ker\I$.}
 \end{figure}

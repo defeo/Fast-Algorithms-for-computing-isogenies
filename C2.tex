@@ -17,25 +17,24 @@ is given by rational fractions as in \eqref{eq:isog},
 \begin{equation}
   \label{eq:C2:I}
   \frac{g\bigl(x([i]P_k)\bigr)}{h\bigl(x([i]P_k)\bigr)} = x([i]P_k')
-  \quad\text{for $i\in(\Z/p^k\Z)^\ast$} 
+  \quad\text{for $i\in\Z/p^k\Z$} 
 \end{equation}
 and by \eqref{eq:velu-deg} $\deg g = \deg h + 1 = \ell$.
 
-Observe that having primitive points in $E[p^k]$, using
-\eqref{eq:C2:I} one can compute the rational fraction
-$\frac{g(X)}{h(X)}$ through Cauchy interpolation over such points as
-in \cite[5.7]{vzGG}. C2 takes $\frac{\euler(p^k)}{2} > 2\ell - 1$,
-interpolates the rational fraction and then checks that it corresponds
-to the restriction of an isogeny to the $x$-axis. If this is the case,
-the whole isogeny is computed through Vélu formulae and the algorithm
-terminates.  Otherwise the guess $\I(P_k) = P_k'$ was false; then C2
-computes a new generator for $E'[p^k]$ and starts over again.
+Using \eqref{eq:C2:I} one can compute the rational fraction
+$\frac{g(X)}{h(X)}$ through Cauchy interpolation over the points of
+$E[p^k]$. C2 takes $p^k > 4\ell - 2$, interpolates the rational
+fraction and then checks that it corresponds to the restriction of an
+isogeny to the $x$-axis. If this is the case, the whole isogeny is
+computed through Vélu formulae and the algorithm terminates. Otherwise
+the guess $\I(P_k) = P_k'$ was false, then C2 computes a new generator
+for $E'[p^k]$ and starts over again.
 
 We now go through the details of the algorithm.
 
 \paragraph{The $p$-torsion}
 The computation of the $p$-torsion points follows from the work of
-Gunji \cite{Gun76}. 
+Gunji \cite{Gun76}. Here we suppose $p\ne2$.
 
 \begin{definition}
   \label{def:hasse}
@@ -44,13 +43,180 @@ Gunji \cite{Gun76}.
   $f(X)^{\frac{p-1}{2}}$.
 \end{definition}
 
+Gunji shows the following proposition and gives formulae to compute
+the $p$-torsion points.
+
 \begin{proposition}
+  \label{th:gunji}
   Let $c=\sqrt[p-1]{H_E}$, then the $p$-torsion points of $E$ are
   defined in $\F_q[c]$ and their abscissae are defined in $\F_q[c^2]$.
 \end{proposition}
 
 
 \paragraph{The $p^k$-torsion}
+$p^k$-torsion points are iteratively computed via $p$-descent. The
+basic idea to split the multiplication map as $[p] = \frobisog\circ V$
+and invert each of the components. The purely inseparable isogeny
+$\frobisog$ is just a frobenius map and the separable isogeny $V$ can
+be computed by Vélu formulae once the $p$-torsion points are
+known. Although this is reasonably efficient, pulling $V$ back may
+involve factoring polynomials of degree $p$ in some extension field.
+
+A finer way to do the $p$-descent, as suggested in the original paper
+\cite{Cou96}, is to use the works of Voloch \cite{Vol90}. Suppose
+$p\ne2$, let $E$ and $\widetilde{E}$ have equations respectively
+\begin{align*}
+  y^2&=f(x)=x^3+a_2x^2+a_4x+a_6 \;\text{,}\\
+  \tilde{y}^2&=\tilde{f}(\tilde{x}) = \tilde{x}^3 +
+  \sqrt[p]{a_2}\tilde{x}^2 + \sqrt[p]{a_4}\tilde{x} + \sqrt[p]{a_6}
+  \;\text{,}
+\end{align*}
+set
+ \begin{equation}
+  \label{eq:voloch:cover}
+  \tilde{f}(X)^{\frac{p-1}{2}} = \alpha(X) + H_{\widetilde{E}}X^{p-1} + X^p\beta(X)
+\end{equation}
+with $\deg \alpha < p-1$ and $H_{\widetilde{E}}$ the Hasse invariant
+of $\widetilde{E}$.
+
+\begin{proposition}
+  \label{th:voloch}
+  Let $\tilde{c} = \sqrt[p-1]{H_{\widetilde{E}}}$, the cover of
+  $\widetilde{E}$ defined by
+  \begin{equation}
+    \label{th:voloch:cover}
+    C:\; z^p - z = \frac{\tilde{y}\beta(\tilde{x})}{\tilde{c}^p}
+  \end{equation}
+  is an étale cover of degree $p$ and is isomorphic to $E$ over
+  $\F_q[\tilde{c}]$; the isomorphism is given by
+  \begin{equation}
+    \label{th:voloch:isom}
+    \left\{
+      \begin{aligned}
+        (\tilde{x}, \tilde{y}) &= V(x, y)\\
+        z &= \frac{y}{\tilde{c}^p}\sum_{i=1}^{(p-1)}\frac{1}{x - x([i]P_1)}
+      \end{aligned}
+    \right.
+  \end{equation}
+  where $P_1$ is a $p$-torsion point of $E$.
+\end{proposition}
+
+The descent is then performed as follows: starting from a point $P$ on
+$E$, first pull it back along $\frobisog$, then take one of its
+pre-images in $C$ by solving equation \eqref{th:voloch:cover}, finally
+use equation \eqref{th:voloch:isom} to land on a point $P'$ in $E$.
+The proposition guarantees that $[p]P' = P$. The descent is pictured
+in figure \ref{fig:voloch}.
+
+\begin{figure}
+  \centering
+  \[
+  \xymatrix{\widetilde{E}\ar@/^/[r]^{\frobisog} & E\ar@/^/[l]^{V}}
+  %%
+  \qquad
+  %%
+  \xymatrix{
+    \widetilde{E}\ar@/^/[r]^{\frobisog} & E\ar@/^/@{-->}[l]^{V}\ar[d]_{\simeq}\\
+    & C\ar@/^/[ul]
+  }
+  \]
+  
+  \caption{Two ways of doing the $p$-descent: standard on the left and via a degree $p$ cover on the right}
+  \label{fig:voloch}
+\end{figure}
+
+
+The reason why this is more efficient than a standard descent is the
+shape of equation \eqref{th:voloch:cover}: it is an Artin-Schreier
+equation and it can be solved by many techniques, the simplest being
+linear algebra (as it was suggested in \cite{Cou96}). Once a solution
+$z$ to \eqref{th:voloch:cover} is known, solving in $x$ and $y$ the
+bivariate polynomial system \eqref{th:voloch:isom} takes just a GCD
+computation (explicit formulae were given by Lercier in
+\cite[$\S$6.2]{Ler97}, we give some slightly improved ones in Section
+\ref{sec:}). Compare this with a generic factoring algorithm needed by
+standard descent.
+
+Solving Artin-Schreier equations is the most delicate task of the
+descent and we will further discuss it.
+
+
+\paragraph{Cauchy interpolation}
+Interpolation reconstructs a polynomial from the values it takes on
+some points, Cauchy interpolation reconstructs a rational
+fraction. The Cauchy interpolation algorithm is divided in two phases:
+first find the polynomial $P$ interpolating the evaluation points,
+then use rational fraction reconstruction to find a rational fraction
+congruent to $P$ modulo the polynomial vanishing on the points. The
+first phase is carried out through any classical interpolation
+algorithm, while the second is an XGCD computation. See
+\cite[$\S$5.8]{vzGG} for details.
+
+Cauchy interpolation needs $n+2$ points to reconstruct a degree
+$(k,n-k)$ rational fraction. This, together with \eqref{eq:velu-deg},
+justifies the choice of $k$ such that $p^k > 4\ell - 2$. Some of our
+variants of C2 will interpolate only on the primitive $p^k$-torsion
+points, thus requiring the slightly larger bound $\euler(p^k) \ge
+4\ell - 2$. This is not very important to our asymptotical analysis
+since in both cases $p^k \in O(\ell)$.
+
+\paragraph{Recognizing the isogeny}
+Once the rational fraction $\frac{g(X)}{h(X)}$ has been computed, one
+has to verify that it is indeed an isogeny. The first test is to check
+that the degrees of $g$ and $h$ match equation \eqref{eq:velu-deg}, if
+they don't, the equation can be discarded right away and the algorithm
+can go on with the next trial. Next one can check that $h$ is indeed
+the square of a polynomial. This two tests are usually enough to
+detect an isogeny, but, should they lie, one can still check that the
+resulting rational function is indeed a group morphism by trying some
+random points on $E$. We don't dip into the analysis of the
+probabilities of success of these tests as this will be done in detail
+in Section \ref{sec:}.
+
+
+\subsection{The case $p=2$}
+\label{sec:p=2}
+The algorithm as we have presented it only works when $p\ne2$, it is
+however an easy matter to generalise it. The only phase that doesn't
+work is the computation of the $p^k$-torsion points. For curves in the
+form \eqref{eq:weierstrass=2} the only $2$-torsion point is
+$(0,\sqrt{b})$.
+
+Voloch formulae are hard to adapt, nevertheless a $2$-descent on the
+Kummer surface of $E$ can easily be performed since the doubling
+formula reads
+\begin{equation}
+  x([2]P) = \frac{b}{x(P)^2} + x(P)^2 =
+  \frobisog\left(\frac{\sqrt{b} + x(P)^2}{x(P)} \right) = \frobisog\circ V
+  \;\text{.}
+\end{equation}
+Given point $x_P$ on $K_E$, a pull-back along $\frobisog$ gives a
+point $\tilde{x}_P$ on $K_{\widetilde{E}}$. Then pulling $V$ back
+amounts to solve
+\begin{equation}
+  \label{eq:2-descent}
+  x^2 + \tilde{x}_Px = \sqrt{b}
+\end{equation}
+and this can be turned in an Artin-Schreier equation through the
+change of variables $x \rightarrow x'\tilde{x}_P$.
+
+From the descent on the Kummer surfaces one could deduce a full
+$2$-descent on the curves by solving a quadratic equation at each step
+in order recover the $y$ coordinate, but this would be too
+expensive. Fortunately, the $y$ coordinates are not needed by the
+subsequent steps of the algorithm, thus one may simply ignore
+them. Observe in fact that even if $K_E$ does not have a group law,
+the restriction of scalar multiplication is well defined and can be
+computed through Montgomery formulae \cite{Mon87}. This is enough to
+compute all the abscissae of the points in $E[p^k]$ once a generator
+is known.
+
+
+\subsection{Complexity analysis}
+\label{sec:C2:complexity}
+
+
+
 
 
 % Local Variables:
@@ -63,4 +229,4 @@ Gunji \cite{Gun76}.
 % LocalWords:  Schreier Artin pseudotrace frobenius bivariate Joux Sirvent FFT
 % LocalWords:  Couveignes isogenies Schoof isogeny cryptosystems Lercier
 % LocalWords:  precomputation arithmetics polylogarithmic Karatsuba
-% LocalWords:  endomorphisms
+% LocalWords:  endomorphisms asymptotical
