@@ -77,7 +77,7 @@ set
   \tilde{f}(X)^{\frac{p-1}{2}} = \alpha(X) + H_{\widetilde{E}}X^{p-1} + X^p\beta(X)
 \end{equation}
 with $\deg \alpha < p-1$ and $H_{\widetilde{E}}$ the Hasse invariant
-of $\widetilde{E}$.
+of $\widetilde{E}$. Voloch shows the following.
 
 \begin{proposition}
   \label{th:voloch}
@@ -98,7 +98,7 @@ of $\widetilde{E}$.
       \end{aligned}
     \right.
   \end{equation}
-  where $P_1$ is a $p$-torsion point of $E$.
+  where $P_1$ is a primitive $p$-torsion point of $E$.
 \end{proposition}
 
 The descent is then performed as follows: starting from a point $P$ on
@@ -165,7 +165,7 @@ Once the rational fraction $\frac{g(X)}{h(X)}$ has been computed, one
 has to verify that it is indeed an isogeny. The first test is to check
 that the degrees of $g$ and $h$ match equation \eqref{eq:velu-deg}, if
 they don't, the equation can be discarded right away and the algorithm
-can go on with the next trial. Next one can check that $h$ is indeed
+can go on with the next trial. Next, one can check that $h$ is indeed
 the square of a polynomial. This two tests are usually enough to
 detect an isogeny, but, should they lie, one can still check that the
 resulting rational function is indeed a group morphism by trying some
@@ -214,8 +214,115 @@ is known.
 
 \subsection{Complexity analysis}
 \label{sec:C2:complexity}
+Analysing the complexity of C2 is a delicate matter since the
+algorithm relies on some unspecified computer algebra algorithms in
+order to deal with finite extensions of $\F_q$. The choice of the
+actual algorithms may strongly influence the overall complexity of C2.
+In this section we will only give some lower bounds on the complexity
+of C2, since a much more accurate complexity analysis will be carried
+out in Section \ref{sec:}.
+
+\paragraph{$p$-torsion}
+Applying Gunji formulae first requires to find $c$ and $c'$, $p-1$-th
+roots of $H_E$ and $H_{E'}$, and build the field extension $\F_q[c] =
+\F_q[c']$. Independently of the actual algorithm used, observe that in
+the worst case $F_q[c]$ is a degree $p-1$ extension of $F_q$, thus
+simply representing one of its elements requires $\Theta(pd)$ elements
+of $\F_p$.
+
+Subsequently, the main cost in Gunji's formulae is the computation of
+the determinant of a $\frac{p-1}{2}\times\frac{p-1}{2}$
+quadri-diagonal matrix (see \cite{Gun76}). This takes $\Theta(p^2)$
+operations in $\F_q[c]$, that is no less than $\Omega(p^3d)$
+operations in $\F_p$.
+
+\paragraph{$p^k$-torsion}
+During the $p$-descent, factoring of equations \eqref{th:voloch:cover}
+or \eqref{eq:2-descent} may introduce some field extensions over
+$\F_q[c]$. Observe that an Artin-Schreier polynomial is either
+irreducible or totally split, so at each step of the $p$-descent we
+either stay in the same field or we take a degree $p$ extension. This
+shows that in the worse case, we have to take an extension of degree
+$p^{k-1}$ over $F_q[c]$. The following proposition, which is a
+generalisation of \cite[Prop. 26]{Ler97}, states precisely how likely
+this case is.
+
+\begin{proposition}
+  \label{th:tower}
+  Let $E$ be an elliptic curve over $\F_q$, we note $\U_i$ the
+  smallest field extension of $\F_q$ such that $E[p^i]\subset
+  E(\U_i)$. For any $i\ge1$, either $[\U_{i+1}:\U_i] = p$ or
+  $\U_{i+1}=\U_i=\cdots=\U_1$.
+\end{proposition}
+\begin{proof}
+  The proof in \cite{Ler97} is false. Patching it needs some more
+  calculations in the $p$-adics.
+  \begin{gather}
+    t_{i+1} == t_i mod p^i\\
+    t_{i+1} = t_i + ap^i\\
+    \\
+    t_i == t_{i-1} mod p^{i-1}\\
+    t_i = t_{i-1} + fp^{i-1}\\
+    \\
+    t_{i-1}^{p^{k-1}} = 1 + cp^{i-1}\\
+    t_i^{p^{k-1}} = 1 + cp^{i-1} + p^{k-1}t_{i-1}^{p^{k-1}-1}fp^{i-1} + ... !== 1 mod p^i\\
+    t_i^{p^k} == 1 mod p^i\\
+    \\
+    t_i^{p^{k-1}} = 1 + gp^{i-1} \\
+    t_i^{p^k} = 1 + gp^{i} + ... = 1 + hp^{i}\\
+    t_{i+1}^{p^k} = t_i^{p^k} + p^kt_i^{p^k-1}ap^i + O(p^{2i}) == t_i^{p^k} == 1 + hp^i != 1 mod p^{i+1}\\
+  \end{gather}
+\end{proof}
+
+Thus we see that the worse case is the average case and that it is
+asymptotically the only relevant one. In this situation, one needs
+$\Theta(p^kd)$ elements of $\F_p$ to store an element of $\U_k$.
+
+Now the last iteration of the $p$-descent needs to solve an
+Artin-Schreier equation in $\U_k$. To do this C2 precomputes the
+matrix of the $F_q$-linear application $(x^q-x):\U_k\rightarrow\U_k$
+and its inverse, plus the matrix of the $F_p$-linear application
+$(x_p-x):\F_q\rightarrow\F_q$ and its inverse. The former is the most
+expensive one and takes $\Theta(p^{3k})$ operations in $\F_q$, that is
+$\Omega(p^{3k}d) = \Omega(\ell^3d)$ operations in $\F_p$, plus a
+storage of $\Theta(\ell^2d)$ elements of $\F_p$. Observe that this
+precomputation may be used to compute any other isogeny.
+
+After the precomputation has been done, C2 successively applies the
+two inverse matrices; details can be found in
+\cite[$\S$2.4]{Cou96}. This costs at least $\Omega(\ell^2d)$.
 
 
+\paragraph{Interpolation}
+The most expensive part of Cauchy interpolation is the polynomial
+interpolation phase. Using fast techniques, this can be done in
+$\Theta(\Mult(p^k)\log p^k)$ operations in $\U_k$, that is at least
+$\Omega(p^kd\Mult(p^k)\log p^k) = \Omega(\ell^2d\log
+\ell)$. Mistakingly, the $p^kd$ contribution due to arithmetics in
+$\U_k$ had been underestimated in the complexity analysis of
+\cite{Cou96}, thus leading to the wrong complexity estimate of
+$\Omega(\ell d\log\ell)$ for this phase.
+
+
+\paragraph{Recognizing the isogeny}
+The cost of testing for squareness of the denominator and other tests
+is negligible compared to the rest of the algorithm. Nevertheless it
+is important to realize that on average half of the $\euler(p^k)$
+mappings from $E[p^k]$ to $E'[p^k]$ must be tried before finding the
+isogeny, for only one of these mappings corresponds to it. This
+implies that the Cauchy interpolation step must be repeated an average
+of $\Theta(p^k)$ times, thus contributing a $\Omega(\ell^3d\log\ell)$
+to the total complexity.
+
+Summing up all the contributions one ends up with the following lower
+bound
+\begin{equation}
+  \label{eq:C2:complexity}
+  \Omega(\ell^3d\log\ell + p^3d)
+\end{equation}
+plus a precomputation step whose cost is negligible compared to this
+one and a space requirement of $\Theta(\ell^2d)$ elements. In the next
+sections we will see how to make all this costs drop.
 
 
 
@@ -228,5 +335,5 @@ is known.
 %
 % LocalWords:  Schreier Artin pseudotrace frobenius bivariate Joux Sirvent FFT
 % LocalWords:  Couveignes isogenies Schoof isogeny cryptosystems Lercier
-% LocalWords:  precomputation arithmetics polylogarithmic Karatsuba
+% LocalWords:  precomputation arithmetics polylogarithmic Karatsuba precomputes
 % LocalWords:  endomorphisms asymptotical

@@ -88,7 +88,7 @@ we mean a separable isogeny with kernel isomorphic to $\Z/\ell\Z$.
 
 \paragraph{Vélu formulae}
 For any finite subgroup $G \subset E(\clot{\K})$, Vélu formulae
-\cite{Vel71} give an elliptic curve $\tilde{E}$ and an explicit
+\cite{Vel71} give an elliptic curve $\bar{E}$ and an explicit
 isogeny in a canonical way. The isogeny is $\K$-rational if and only
 if the polynomial vanishing on the abscissae of $G$ belongs to
 $\K[X]$.
@@ -98,10 +98,11 @@ In practice, if $E$ is defined over $\F_q$ and if
 is known, Vélu formulae compute a rational function
 \begin{equation}
   \label{eq:isog}
-  \I(x,y) = \left(\frac{g(x)}{h(x)}, \frac{k(x,y)}{l(x)}\right)  
+  \bar{\I}(x,y) = \left(\frac{g(x)}{h(x)}, \frac{k(x,y)}{l(x)}\right)  
 \end{equation}
-and a curve $\tilde{E}$ such that $\I : E\rightarrow\tilde{E}$ is an $\F_q$-rational
-isogeny of kernel $G$. A consequence of Vélu formulae is
+and a curve $\bar{E}$ such that $\bar{\I} : E\rightarrow\bar{E}$ is an
+$\F_q$-rational isogeny of kernel $G$. A consequence of Vélu formulae
+is
 \begin{equation}
   \label{eq:velu-deg}
   \deg g = \deg h + 1 = \card{G}
@@ -112,13 +113,13 @@ Given two curves $E$ and $E'$, Vélu formulae reduce the problem of
 finding an explicit isogeny between $E$ and $E'$ to that of finding
 the kernel of an isogeny between them. Once the polynomial $h(X)$
 vanishing on $\ker\I$ is found, the explicit isogeny is computed
-composing Vélu formulae with the isomorphism between $\tilde{E}$ and
+composing Vélu formulae with the isomorphism between $\bar{E}$ and
 $E'$ as in figure \ref{fig:velu}.
 
 \begin{figure}
   \centering
   \[\xymatrix{
-    E \ar[r]^{\tilde{\I}} \ar[rd]^\I & \tilde{E} \ar[d]^{\simeq}\\
+    E \ar[r]^{\bar{\I}} \ar[rd]^\I & \bar{E} \ar[d]^{\simeq}\\
     & E'
   }\]
   \caption{Using Vélu formulae to compute an explicit isogeny.}
