@@ -1,14 +1,14 @@
 \section{The algorithm C2}
 
 The algorithm we refer to as C2 was originally proposed in
-\cite{Cou96}. It takes as input two elliptic curves $E, E'$ and an odd
-prime $\ell$ different from $p$ and it returns, if it exists, an
+\cite{Cou96}. It takes as input two elliptic curves $E, E'$ and an
+integer $\ell$ prime to $p$ and it returns, if it exists, an
 $\F_q$-rational isogeny of degree $\ell$ between $E$ and $E'$. It only
 works in odd characteristic.
 
 \paragraph{The idea} Suppose it exists an $F_q$-rational isogeny
-$\I:E\rightarrow E'$ of degree $\ell$. Since $\ell\ne p$ one has
-$\I(E[p^k]) = E'[p^k]$.
+$\I:E\rightarrow E'$ of degree $\ell$. Since $\ell$ is prime to $p$
+one has $\I(E[p^k]) = E'[p^k]$.
 
 Recall that $E[p^k]$ and $E'[p^k]$ are cyclic groups, C2 iteratively
 computes generators $P_k,P_k'$ of $E[p^k]$ and $E'[p^k]$
@@ -166,12 +166,13 @@ has to verify that it is indeed an isogeny. The first test is to check
 that the degrees of $g$ and $h$ match equation \eqref{eq:velu-deg}, if
 they don't, the equation can be discarded right away and the algorithm
 can go on with the next trial. Next, one can check that $h$ is indeed
-the square of a polynomial. This two tests are usually enough to
-detect an isogeny, but, should they lie, one can still check that the
-resulting rational function is indeed a group morphism by trying some
-random points on $E$. We don't dip into the analysis of the
-probabilities of success of these tests as this will be done in detail
-in Section \ref{sec:}.
+the square of a polynomial (or, if $\ell$ is even, the product of one
+factor of the $2$-division polynomial and a square polynomial). This
+two tests are usually enough to detect an isogeny, but, should they
+lie, one can still check that the resulting rational function is
+indeed a group morphism by trying some random points on $E$. We don't
+dip into the analysis of the probabilities of success of these tests
+as this will be done in detail in Section \ref{sec:}.
 
 
 \subsection{The case $p=2$}
@@ -220,7 +221,7 @@ order to deal with finite extensions of $\F_q$. The choice of the
 actual algorithms may strongly influence the overall complexity of C2.
 In this section we will only give some lower bounds on the complexity
 of C2, since a much more accurate complexity analysis will be carried
-out in Section \ref{sec:}.
+out in Section \ref{sec:C2-AS}.
 
 \paragraph{$p$-torsion}
 Applying Gunji formulae first requires to find $c$ and $c'$, $p-1$-th
@@ -274,19 +275,22 @@ this case is.
   \end{gather}
 \end{proof}
 
-Thus we see that the worse case is the average case and that it is
-asymptotically the only relevant one. In this situation, one needs
-$\Theta(p^kd)$ elements of $\F_p$ to store an element of $\U_k$.
+Thus for any elliptic curve there is an $i_0$ such that $[\U_i:\U_1] =
+p^{i-i_0}$ for any $i \ge i_0$. This shows that the worse case is the
+average case because asymptotically $[\U_k:\U_1] \in \Theta(p^k)$. In
+this situation, one needs $\Theta(p^kd)$ elements of $\F_p$ to store
+an element of $\U_k$.
 
 Now the last iteration of the $p$-descent needs to solve an
 Artin-Schreier equation in $\U_k$. To do this C2 precomputes the
 matrix of the $F_q$-linear application $(x^q-x):\U_k\rightarrow\U_k$
 and its inverse, plus the matrix of the $F_p$-linear application
 $(x_p-x):\F_q\rightarrow\F_q$ and its inverse. The former is the most
-expensive one and takes $\Theta(p^{3k})$ operations in $\F_q$, that is
-$\Omega(p^{3k}d) = \Omega(\ell^3d)$ operations in $\F_p$, plus a
-storage of $\Theta(\ell^2d)$ elements of $\F_p$. Observe that this
-precomputation may be used to compute any other isogeny.
+expensive one and takes $\Theta(p^{\omega k})$ operations in $\F_q$,
+that is $\Omega(p^{\omega k}d) = \Omega(\ell^\omega d)$ operations in
+$\F_p$, plus a storage of $\Theta(\ell^2d)$ elements of
+$\F_p$. Observe that this precomputation may be used to compute any
+other isogeny.
 
 After the precomputation has been done, C2 successively applies the
 two inverse matrices; details can be found in
@@ -295,13 +299,14 @@ two inverse matrices; details can be found in
 
 \paragraph{Interpolation}
 The most expensive part of Cauchy interpolation is the polynomial
-interpolation phase. Using fast techniques, this can be done in
-$\Theta(\Mult(p^k)\log p^k)$ operations in $\U_k$, that is at least
-$\Omega(p^kd\Mult(p^k)\log p^k) = \Omega(\ell^2d\log
-\ell)$. Mistakingly, the $p^kd$ contribution due to arithmetics in
-$\U_k$ had been underestimated in the complexity analysis of
-\cite{Cou96}, thus leading to the wrong complexity estimate of
-$\Omega(\ell d\log\ell)$ for this phase.
+interpolation phase. In fact, simply representing a polynomial of
+degree $p^k-1$ with in $\U_k[X]$ takes $\Theta(p^{2k}d)$ elements,
+thus at least $\Omega(\ell^2d)$ operations are needed to interpolate
+unless special care is taken. Mistakingly, this contribution due to
+arithmetics in $\U_k$ had been underestimated in the complexity
+analysis of \cite{Cou96}, thus leading to the wrong complexity
+estimate of $\Omega(\ell d\log\ell)$ for this phase. We will give more
+details on interpolation in Section \ref{sec:}
 
 
 \paragraph{Recognizing the isogeny}
@@ -323,6 +328,32 @@ bound
 plus a precomputation step whose cost is negligible compared to this
 one and a space requirement of $\Theta(\ell^2d)$ elements. In the next
 sections we will see how to make all this costs drop.
+
+
+\subsection{The case $(p,\ell)\ne1$}
+\label{sec:C2:non-prime}
+If we are interested in finding a separable isogeny whose degree is
+not prime to $p$, the best way is to compute the curve $\widetilde{E}$
+such that $E = \widetilde{E}^{(p)}$, then compute an isogeny of degree
+$\ell/p$ between $\widetilde{E}$ and $E'$ and finally compose it with
+the separable $p$-isogeny $V$ from $E$ to $\widetilde{E}$.
+
+Observe however that C2 can be easily adapted to directly compute such
+an isogeny. In fact let $v=v_p(\ell)$, then $\I(E[p^k]) =
+E'[p^{k-v}]$. All one needs to do in this case is to modify the Cauchy
+interpolation so that it interpolates the rational function that sends
+a generator of $E[p^k]$ over a generator of $E'[p^{k-v}]$ and the
+other points accordingly. The maximum number of trials to do before
+finding the isogeny is $\euler(p^{k-v})$, thus the overall complexity
+is
+\begin{equation}
+  \label{eq:C2:complexity-non-prime}
+  \Omega\left(\frac{\ell^3}{p^v}d\log\ell + p^3d\right)
+  \;\text{.}
+\end{equation}
+
+Although this method is less efficient than the first one, it will
+come handy in Section \ref{sec:}.
 
 
 
