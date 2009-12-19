@@ -276,10 +276,10 @@ this case is.
 \end{proof}
 
 Thus for any elliptic curve there is an $i_0$ such that $[\U_i:\U_1] =
-p^{i-i_0}$ for any $i \ge i_0$. This shows that the worse case is the
-average case because asymptotically $[\U_k:\U_1] \in \Theta(p^k)$. In
-this situation, one needs $\Theta(p^kd)$ elements of $\F_p$ to store
-an element of $\U_k$.
+p^{i-i_0}$ for any $i \ge i_0$. This shows that the worse and the
+average case coincide since asymptotically $[\U_k:\U_1] \in
+\Theta(p^k)$. In this situation, one needs $\Theta(p^kd)$ elements of
+$\F_p$ to store an element of $\U_k$.
 
 Now the last iteration of the $p$-descent needs to solve an
 Artin-Schreier equation in $\U_k$. To do this C2 precomputes the
@@ -300,9 +300,9 @@ two inverse matrices; details can be found in
 \paragraph{Interpolation}
 The most expensive part of Cauchy interpolation is the polynomial
 interpolation phase. In fact, simply representing a polynomial of
-degree $p^k-1$ with in $\U_k[X]$ takes $\Theta(p^{2k}d)$ elements,
-thus at least $\Omega(\ell^2d)$ operations are needed to interpolate
-unless special care is taken. Mistakingly, this contribution due to
+degree $p^k-1$ in $\U_k[X]$ takes $\Theta(p^{2k}d)$ elements, thus at
+least $\Omega(\ell^2d)$ operations are needed to interpolate unless
+special care is taken. Mistakingly, this contribution due to
 arithmetics in $\U_k$ had been underestimated in the complexity
 analysis of \cite{Cou96}, thus leading to the wrong complexity
 estimate of $\Omega(\ell d\log\ell)$ for this phase. We will give more
@@ -316,14 +316,14 @@ is important to realize that on average half of the $\euler(p^k)$
 mappings from $E[p^k]$ to $E'[p^k]$ must be tried before finding the
 isogeny, for only one of these mappings corresponds to it. This
 implies that the Cauchy interpolation step must be repeated an average
-of $\Theta(p^k)$ times, thus contributing a $\Omega(\ell^3d\log\ell)$
-to the total complexity.
+of $\Theta(p^k)$ times, thus contributing a $\Omega(\ell^3d)$ to the
+total complexity.
 
 Summing up all the contributions one ends up with the following lower
 bound
 \begin{equation}
   \label{eq:C2:complexity}
-  \Omega(\ell^3d\log\ell + p^3d)
+  \Omega(\ell^3d + p^3d)
 \end{equation}
 plus a precomputation step whose cost is negligible compared to this
 one and a space requirement of $\Theta(\ell^2d)$ elements. In the next
@@ -348,7 +348,7 @@ finding the isogeny is $\euler(p^{k-v})$, thus the overall complexity
 is
 \begin{equation}
   \label{eq:C2:complexity-non-prime}
-  \Omega\left(\frac{\ell^3}{p^v}d\log\ell + p^3d\right)
+  \Omega\left(\frac{\ell^3}{p^v}d + p^3d\right)
   \;\text{.}
 \end{equation}
 
