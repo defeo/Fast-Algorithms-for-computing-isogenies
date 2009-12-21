@@ -73,7 +73,7 @@
 
 %%Théorèmes
 \newtheorem{definition}{Definition}
-\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{theorem}{Theorem}
 \newtheorem{lemma}[definition]{Lemma}
 \newtheorem{corollary}[definition]{Corollary}
 \newtheorem{proposition}[definition]{Proposition}
@@ -90,7 +90,7 @@
 }{\end{minipage}\end{flushleft}}
 
 
-\newenvironment{algorithm}[3]{\small\begin{center}\begin{minipage}{0.48\textwidth}
+\newenvironment{algorithm}[3]{\small\begin{center}\begin{minipage}{\textwidth}
       \sf
       \rule{\textwidth}{0.2pt}\\
       \makebox[\textwidth][c]{\textbf{#1}}\\
@@ -126,6 +126,9 @@
 \input{C2}
 \input{C2-AS}
 \input{C2-AS-FI}
+\input{bounded}
+\input{implementation}
+\input{benchmarks}
 \input{biblio}
 
 \end{document}
@@ -134,6 +137,7 @@
 % Local Variables:
 % mode:flyspell
 % ispell-local-dictionary:"british"
+% mode:TeX-PDF
 % End:
 %
 % LocalWords:  Schreier Artin pseudotrace frobenius bivariate memoization

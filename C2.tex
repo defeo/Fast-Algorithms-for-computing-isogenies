@@ -1,4 +1,5 @@
 \section{The algorithm C2}
+\label{sec:C2}
 
 The algorithm we refer to as C2 was originally proposed in
 \cite{Cou96}. It takes as input two elliptic curves $E, E'$ and an
@@ -134,8 +135,8 @@ $z$ to \eqref{th:voloch:cover} is known, solving in $x$ and $y$ the
 bivariate polynomial system \eqref{th:voloch:isom} takes just a GCD
 computation (explicit formulae were given by Lercier in
 \cite[$\S$6.2]{Ler97}, we give some slightly improved ones in Section
-\ref{sec:}). Compare this with a generic factoring algorithm needed by
-standard descent.
+\ref{sec:implementation}). Compare this with a generic factoring
+algorithm needed by standard descent.
 
 Solving Artin-Schreier equations is the most delicate task of the
 descent and we will further discuss it.
@@ -172,7 +173,7 @@ two tests are usually enough to detect an isogeny, but, should they
 lie, one can still check that the resulting rational function is
 indeed a group morphism by trying some random points on $E$. We don't
 dip into the analysis of the probabilities of success of these tests
-as this will be done in detail in Section \ref{sec:}.
+as this will be done in detail in Section \ref{sec:bounded}.
 
 
 \subsection{The case $p=2$}
@@ -306,7 +307,7 @@ special care is taken. Mistakingly, this contribution due to
 arithmetics in $\U_k$ had been underestimated in the complexity
 analysis of \cite{Cou96}, thus leading to the wrong complexity
 estimate of $\Omega(\ell d\log\ell)$ for this phase. We will give more
-details on interpolation in Section \ref{sec:}
+details on interpolation in Section \ref{sec:C2-AS-FI}.
 
 
 \paragraph{Recognizing the isogeny}
@@ -353,7 +354,7 @@ is
 \end{equation}
 
 Although this method is less efficient than the first one, it will
-come handy in Section \ref{sec:}.
+come handy in Section \ref{sec:bounded}.
 
 
 

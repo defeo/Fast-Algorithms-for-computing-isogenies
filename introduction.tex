@@ -60,11 +60,12 @@ Section \ref{sec:C2-AS}. We refer to this variant as ``C2-AS''.
 In the present paper we give a complete review of Couveignes'
 algorithm, we present new variants that reach the foreseen quadratic
 bound in $\ell^2$ and prove the accurate complexity estimate of
-$\tildO(\todo)$ operations which doesn't suppose $p$ to be
-fixed. In Section \ref{sec:} we also extend the algorithm beyond its
-original scope to solve the more general problem of \emph{bounded
-  degree isogeny finding}; interestingly, this new algorithm turns out
-to have a better asymptotic complexity than any previously known
+$\tildO\left( p^2d^3 + p^3d^2 + (pd)^\omega + p^3\ell d + p^2\ell d^2
+\right)$ operations which doesn't suppose $p$ to be fixed. In Section
+\ref{sec:bounded} we also extend the algorithm beyond its original
+scope to solve the more general problem of \emph{bounded degree
+  isogeny finding}; interestingly, this new algorithm turns out to
+have a better asymptotic complexity than any previously known
 approach.
 
 \paragraph{Notation and plan}
@@ -96,22 +97,7 @@ $2<\omega\le3$ be the exponent of linear algebra, that is an integer
 such that $n\times n$ matrices can be multiplied in $n^\omega$
 operations.
 
-The plan is the following.\\
-Preliminaries on isogenies\\
-C2\\
-extension to $p=2$\\
-complexity of C2\\
-C2-AS\\
-FAAST\\
-interpolation\\
-complexity of C2-AS-FI\\
-modular composition\\
-complexity of C2-AS-FI-MC\\
-bounded degree problem\\
-complexity of CBD-AS-FI-MC, comparison to other methods\\
-implementation\\
-benchmarks\\
-
+The plan is the following. \todo
 
 
 % Local Variables:
