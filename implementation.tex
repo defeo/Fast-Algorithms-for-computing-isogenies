@@ -1,0 +1,210 @@
+\section{Implementation}
+\label{sec:implementation}
+
+We implemented C2-AS-FI and C2SD-AS-FI as \texttt{C++} programs using
+the libraries \texttt{NTL} for finite field arithmetics, \texttt{gf2x}
+for fast arithmetics in characteristic $2$ and \texttt{FAAST} for fast
+arithmetics in Artin-Schreier towers.
+
+This section mainly deals with some tricks we implemented in order to
+speed up the computation.
+
+\subsection{Building $E[p^k]$ and $E'[p^k]$}
+\label{sec:impl:torsion}
+
+\paragraph{$p$-torsion}
+For $p\ne2$, C2 and its variants require to build the extension
+$\F_q[c]$ where $c$ is a $p-1$-th root of $H_E$. In order to deal with
+the lowest possible extension degree, it is a good idea to modify the
+curve so that $[\F_q[c]:\F_q]$ is the smallest possible.
+
+$[\F_q[c]:\F_q]$ is invariant under isomorphism, but taking a twist
+can save us a quadratic extension. Let $u=c^{-2}$, the curve
+\begin{equation*}
+  \bar{E} : y^2 = x^3 + a_2ux^2 + a_4u^2x + a_6u^3
+\end{equation*}
+is defined over $\F_q[c^2]$ and is isomorphic to $E$ over $\F_q[c]$
+via $(x,y)\mapsto(\sqrt{u}^2x,\sqrt{u}^3y)$. Its Hasse invariant is
+$H_{\bar{E}} = (u)^{\frac{p-1}{2}}H_E = 1$, thus its $p$-torsion
+points are defined over $\F_q[c^2]$.
+
+In order to compute the $p^k$-torsion points of $E$ we build
+$\F_q[c^2]$, we compute $\bar{P}$ a $p^k$-torsion points of $\bar{E}$
+using $p$-descent, then we invert the isomorphism to compute the
+abscissa of $P\in E[p^k]$. Since the Cauchy interpolation only needs
+the abscissae of $E[p^k]$, this is enough to complete the
+algorithm. Scalar multiples of $P$ can be computed without knowledge
+of $y(P)$ using Montgomery formulae \cite{Mon87}.
+
+Remark that for $p=2$ we use the same construction in an implicit way
+since we do a $p$-descent on the Kummer surface.
+
+
+\paragraph{$p^k$-torsion points}
+For $p\ne2$ we use Voloch's $p$-descent to compute the $p^k$-torsion
+points iteratively as described in Section \ref{sec:C2}. To factor the
+Artin-Schreier polynomial \eqref{th:voloch:cover}, we use the
+algorithms from \cite{Cou00} and \cite{DFS09} that were analysed in
+Section \ref{sec:C2-AS}. All these algorithms were provided by the
+library \texttt{FAAST}.
+
+To solve system \eqref{th:voloch:isom} we first compute
+\begin{equation*}
+  V(x,y) = \left(\frac{g(x)}{h^2(x)}, 
+    sy\left(\frac{g(x)}{h^2(x)}\right)'\right)
+\end{equation*}
+through Vélu formulae.\footnote{Vélu formulae compute this isogeny up
+  to an indeterminacy on the sign of the ordinate, the actual value of
+  $s$ must be determined by composing $V$ with $\frobisog$ and
+  verifying that it corresponds to $[p]$ by trying some random
+  points.} Recall that we work on a curve having Hasse invariant $1$,
+system \eqref{th:voloch:isom} can then be rewritten
+\begin{equation*}
+  \left\{
+    \begin{aligned}
+      X &= \frac{g(x)}{h^2(x)}\\
+      Y &= sy\left(\frac{g(x)}{h^2(x)}\right)'\\
+      Z &= -2y\frac{h'(x)}{h(x)}
+    \end{aligned}
+  \right.
+\end{equation*}
+where $(X,Y,Z)$ is the point on the cover $C$ that we want to pull
+back. After some substitutions this is equivalent to
+\begin{equation*}
+  \left\{
+    \begin{aligned}
+      Xh^2(x) - g(x) &= 0\\
+      \left(Xh^2(x) - g(x) - \frac{Y}{sZ}h^2(x)\right)' &= 0
+    \end{aligned}
+  \right.
+\end{equation*}
+Then a solution to this system given by the GCD of the two
+equations. Remark that proposition \ref{th:voloch} ensures there is
+one unique solution. This formulae are slightly more efficient than
+the ones in \cite[$\S$6.2]{Ler97}.
+
+For $p=2$ we use the library \texttt{FAAST} (for solving
+Artin-Schreier equations) on top of \texttt{gf2x} (for better
+performance). There is nothing special to remark about the
+$2$-descent.
+
+
+\subsection{Cauchy interpolation and loop}
+\label{sec:impl:cauchy}
+The polynomial interpolation step is done as described in Section
+\ref{sec:C2-AS-FI}. As a result of this implementation, the polynomial
+interpolation algorithm was added to the library \texttt{FAAST}.
+
+The rational fraction reconstruction is implemented using a fast XGCD
+algorithm on top of \texttt{NTL} and \texttt{gf2x}. This algorithm was
+added to \texttt{FAAST} too.
+
+To check that the rational fractions are isogenies we test their
+degrees, that their denominator is a square and that they act as group
+morphisms on a fixed number of random points. All these checks take a
+negligible amount of time compared to the rest of the algorithm.
+
+However asymptotically fast, the polynomial interpolation step is
+quite expensive for reasonably sized data. Instead of repeating it
+$\frac{\euler(p^k)}{2}$ times, we used composition with the frobenius
+endomorphism $\frobisog_E$ in order to reduce the number of
+interpolations in the final loop. This works as follows. Suppose we
+have computed the polynomial $A_0\in\F_q[X]$ such that
+\begin{equation*}
+  A_0\bigl(x\bigl([n]P\bigr)\bigr) = x\bigl([n]P'\bigr)
+  \quad\text{for any $n$,}
+\end{equation*}
+we view $A_0$ as the restriction to $K_E[p^k]$ of an $\F_q$-rational
+algebraic map\footnote{Notice this is not necessarily a group
+  morphism.}  $\mathcal{A}_0:E\rightarrow E'$.
+
+Let $T$ be the polynomial vanishing on the abscissae of $E[p^k]$
+computed by the algorithm in Section \ref{sec:C2-AS-FI}, compute
+$F\in\F_q[X]$, the restriction of $\frobisog_E$ to $K_E[p^k]$, this is
+\begin{equation}
+  \label{eq:frob}
+  F(X) = X^q \bmod T(X)
+  \text{.}
+\end{equation}
+
+Define the algebraic maps
+\begin{equation*}
+  \mathcal{A}_i := \mathcal{A}_0\circ\frobisog_E^i = \frobisog_{E'}^i\circ\mathcal{A}_0
+\end{equation*}
+where the equality follows from the fact that $\mathcal{A}_0$ is
+$\F_q$-rational. Then their restrictions to $K_E[p^k]$ are given by
+\begin{equation}
+  \label{eq:modcomp}
+  A_i(X) = A_{i-1}(X)\circ F(X) \bmod T(X)
+\end{equation}
+and 
+\begin{equation*}
+  A_i\bigl(x\bigl([n]P\bigr)\bigr) = x\bigl([n]\frobisog_{E'}^i(P')\bigr)
+  \quad\text{for any $n$.}
+\end{equation*}
+Since $\frob_{E'}^i(P')$ is a primitive element of $E'[p^k]$, for any
+$0 < i < [\U_k:\F_q]$ we get a new interpolating polynomial as
+required by C2 and we only have to do the rational fraction
+reconstruction step of the Cauchy interpolation. If
+$\frac{2[\U_k:\F_q]}{\euler(p^k)} = p^{i_0-1}r > 1$, we must compute $p^{i_0-1}r$
+polynomial interpolations and apply this algorithm to each of them in
+order to deduce all the polynomials needed by C2.
+
+We compute \eqref{eq:frob} via square-and-multiply, this costs
+$\Theta(d\Mult(p^kd)\log p)$ operations. Each application of
+\eqref{eq:modcomp} is done via a \emph{modular composition}. The best
+algorithm known for this problem is \cite{Uma09} and using it would
+yield an asymptotic complexity similar\footnote{\cite{Uma09} has a
+  slightly better dependency in $p$ and $d$ and a slightly worse
+  dependency in $\ell$.} to the one of C2-AS-FI; however, \cite{Uma09}
+is not useful on practical instances of the problem, thus we have to
+resort to \cite{BrKu78} which has a much worse asymptotic complexity,
+but performs much faster then our interpolation algorithm in practice.
+
+A similar approach could be used inside the polynomial interpolation
+step\footnote{See Section \ref{sec:C2-AS-FI}.} to deduce $A_k^{(0)}$
+from $A_0^{(0)}$ using modular composition with the multiplication
+maps of $E$ and $E'$ as described in \cite[$\S$2.3]{Cou96}. We didn't
+implement this variant, though.
+
+
+\subsection{Parallelisation of the loop}
+\label{parallel}
+
+The most expensive step of C2-AS-FI and C2SD-AS-FI, in theory as well
+as in practice, is the final loop over the points of
+$E'[p^k]$. Fortunately, this phase is very easy to parallelise with
+very few overhead.
+
+Let $n$ be the number of processors we wish to parallelise on,
+suppose\footnote{Otherwise the parallelisation is straightforward.}
+that $[\U_k:\F_q] = \frac{\euler(p^k)}{2}$ and set
+$m=\left\lfloor\frac{\euler(p^k)}{2n}\right\rfloor$. We compute the
+restriction of $\frobisog_E^{m}$ to $K_E[p^k]$ as
+\begin{equation*}
+  F^{(m)}(X) = F(X) \circ \cdots \circ F(X) \bmod T(X)
+  \;\text{,}
+\end{equation*}
+this can be done with $\Theta(\log m)$ modular compositions via a
+binary square-and-multiply-like approach.
+
+Then compute the $n$ polynomials
+\begin{equation*}
+  A_{mi}(X) = A_{m(i-1)}(X) \circ F^{(m)}(X) \bmod T(X)
+\end{equation*}
+and distribute them to the $n$ processors so that they each work on a
+separate slice of the $A_i$'s.
+
+
+
+% Local Variables:
+% mode:flyspell
+% ispell-local-dictionary:"british"
+% mode:TeX-PDF
+% TeX-master: "ec-isogeny"
+% End:
+%
+% LocalWords:  Schreier Artin pseudotrace frobenius bivariate Joux Sirvent FFT
+% LocalWords:  Couveignes isogenies Schoof isogeny cryptosystems Lercier Hasse
+% LocalWords:  precomputation arithmetics polylogarithmic Karatsuba precomputes
+% LocalWords:  endomorphisms 
