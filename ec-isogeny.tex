@@ -1,4 +1,4 @@
-\documentclass[]{article}
+\documentclass[preprint,1p]{elsarticle}
 
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
@@ -70,7 +70,6 @@
 \newcommand{\wrt}{\dashv}  % appartenance forte, a\wrt A signifie que a est représenté comme un élément de A
 \newcommand{\ndiv}{\nmid}  % ne divise pas
 
-
 %%Théorèmes
 \newtheorem{definition}{Definition}
 \newtheorem{theorem}{Theorem}
@@ -79,47 +78,28 @@
 \newtheorem{proposition}[definition]{Proposition}
 \newtheorem{problem}[definition]{Problem}
 
-\def\myproof{\vspace{-\parsep}\penalty-51\noindent{\sc Proof.}~}
-\def\foorp{\hfill$\square$}
-
-
-\newenvironment{example}[1][]{\begin{flushleft}\noindent\begin{minipage}{\textwidth}
-    \textbf{Example\ifthenelse{\equal{#1}{}}
-      {}
-      { (#1)}~}
-}{\end{minipage}\end{flushleft}}
-
-
-\newenvironment{algorithm}[3]{\small\begin{center}\begin{minipage}{\textwidth}
-      \sf
-      \rule{\textwidth}{0.2pt}\\
-      \makebox[\textwidth][c]{\textbf{#1}}\\
-      \rule[0.5\baselineskip]{\textwidth}{0.2pt}\\
-
-      \vspace{-15pt}
-
-      \parbox{\textwidth}{\textbf{Input} #2}
-      \parbox{\textwidth}{\textbf{Output} #3}
-
-      \vspace{-7pt}
-
-      \begin{enumerate*}}{\end{enumerate*}
-      \vspace{-11pt}
-      \rule{\textwidth}{0.2pt}
-  \end{minipage}\end{center}
-}
-
+\journal{Journal of Number Theory}
 
 \begin{document}
 
-\title{Fast algorithms for computing isogenies between ordinary
-  elliptic curves in small characteristic} \author{Luca De
-  Feo\footnote{LIX, {\'E}cole Polytechnique, 91128 Palaiseau, France}}
+\begin{frontmatter}
 
-\maketitle
+\title{Fast algorithms for computing isogenies between ordinary
+  elliptic curves in small characteristic}
+\author{Luca De Feo}
+\ead{luca.defeo@polytechnique.edu}
+\address{LIX, {\'E}cole Polytechnique, 91128 Palaiseau, France}
+
+
 \begin{abstract}
   We improve Couveignes' algorithm \cite{Cou96}.
 \end{abstract}
+
+\begin{keyword}
+  Elliptic curves \sep Isogenies \sep Cryptography \sep Algorithms
+\end{keyword}
+
+\end{frontmatter}
 
 \input{introduction}
 \input{preliminaries}

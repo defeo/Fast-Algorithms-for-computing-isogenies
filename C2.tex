@@ -7,13 +7,14 @@ integer $\ell$ prime to $p$ and it returns, if it exists, an
 $\F_q$-rational isogeny of degree $\ell$ between $E$ and $E'$. It only
 works in odd characteristic.
 
-\paragraph{The idea} Suppose it exists an $F_q$-rational isogeny
+\subsection{The original algorithm}
+Suppose there exists an $\F_q$-rational isogeny
 $\I:E\rightarrow E'$ of degree $\ell$. Since $\ell$ is prime to $p$
-one has $\I(E[p^k]) = E'[p^k]$.
+one has $\I(E[p^k]) = E'[p^k]$ for any $k$.
 
-Recall that $E[p^k]$ and $E'[p^k]$ are cyclic groups, C2 iteratively
+Recall that $E[p^k]$ and $E'[p^k]$ are cyclic groups. C2 iteratively
 computes generators $P_k,P_k'$ of $E[p^k]$ and $E'[p^k]$
-respectively. Now C2 makes the guess $\I(P_k) = P_k'$, then, if $\I$
+respectively. Now C2 makes the guess $\I(P_k) = P_k'$; then, if $\I$
 is given by rational fractions as in \eqref{eq:isog},
 \begin{equation}
   \label{eq:C2:I}
@@ -24,12 +25,12 @@ and by \eqref{eq:velu-deg} $\deg g = \deg h + 1 = \ell$.
 
 Using \eqref{eq:C2:I} one can compute the rational fraction
 $\frac{g(X)}{h(X)}$ through Cauchy interpolation over the points of
-$E[p^k]$. C2 takes $p^k > 4\ell - 2$, interpolates the rational
-fraction and then checks that it corresponds to the restriction of an
-isogeny to the $x$-axis. If this is the case, the whole isogeny is
-computed through Vélu formulae and the algorithm terminates. Otherwise
-the guess $\I(P_k) = P_k'$ was false, then C2 computes a new generator
-for $E'[p^k]$ and starts over again.
+$E[p^k]$ for $k$ large enough. C2 takes $p^k > 4\ell - 2$,
+interpolates the rational fraction and then checks that it corresponds
+to the restriction of an isogeny to the $x$-axis. If this is the case,
+the whole isogeny is computed through Vélu formulae and the algorithm
+terminates. Otherwise the guess $\I(P_k) = P_k'$ was wrong, then C2
+computes a new generator for $E'[p^k]$ and starts over again.
 
 We now go through the details of the algorithm.
 
@@ -39,8 +40,8 @@ Gunji \cite{Gun76}. Here we suppose $p\ne2$.
 
 \begin{definition}
   \label{def:hasse}
-  Let $E$ have equation $y^2 = f(x)$, one defines the \emph{Hasse
-    invariant} of $E$, noted $H_E$ as the coefficient of $X^{p-1}$ in
+  Let $E$ have equation $y^2 = f(x)$. The \emph{Hasse invariant} of
+  $E$, noted $H_E$, is the coefficient of $X^{p-1}$ in
   $f(X)^{\frac{p-1}{2}}$.
 \end{definition}
 
@@ -49,22 +50,22 @@ the $p$-torsion points.
 
 \begin{proposition}
   \label{th:gunji}
-  Let $c=\sqrt[p-1]{H_E}$, then the $p$-torsion points of $E$ are
+  Let $c=\sqrt[p-1]{H_E}$; then, the $p$-torsion points of $E$ are
   defined in $\F_q[c]$ and their abscissae are defined in $\F_q[c^2]$.
 \end{proposition}
 
 
 \paragraph{The $p^k$-torsion}
 $p^k$-torsion points are iteratively computed via $p$-descent. The
-basic idea to split the multiplication map as $[p] = \frobisog\circ V$
+basic idea is to split the multiplication map as $[p] = \frobisog\circ V$
 and invert each of the components. The purely inseparable isogeny
 $\frobisog$ is just a frobenius map and the separable isogeny $V$ can
 be computed by Vélu formulae once the $p$-torsion points are
-known. Although this is reasonably efficient, pulling $V$ back may
+known. Although this is reasonably efficient, pulling back $V$ may
 involve factoring polynomials of degree $p$ in some extension field.
 
 A finer way to do the $p$-descent, as suggested in the original paper
-\cite{Cou96}, is to use the works of Voloch \cite{Vol90}. Suppose
+\cite{Cou96}, is to use the work of Voloch \cite{Vol90}. Suppose
 $p\ne2$, let $E$ and $\widetilde{E}$ have equations respectively
 \begin{align*}
   y^2&=f(x)=x^3+a_2x^2+a_4x+a_6 \;\text{,}\\
@@ -130,7 +131,7 @@ in figure \ref{fig:voloch}.
 The reason why this is more efficient than a standard descent is the
 shape of equation \eqref{th:voloch:cover}: it is an Artin-Schreier
 equation and it can be solved by many techniques, the simplest being
-linear algebra (as it was suggested in \cite{Cou96}). Once a solution
+linear algebra (as was suggested in \cite{Cou96}). Once a solution
 $z$ to \eqref{th:voloch:cover} is known, solving in $x$ and $y$ the
 bivariate polynomial system \eqref{th:voloch:isom} takes just a GCD
 computation (explicit formulae were given by Lercier in
@@ -144,13 +145,13 @@ descent and we will further discuss it.
 
 \paragraph{Cauchy interpolation}
 Interpolation reconstructs a polynomial from the values it takes on
-some points, Cauchy interpolation reconstructs a rational
+some points; Cauchy interpolation reconstructs a rational
 fraction. The Cauchy interpolation algorithm is divided in two phases:
 first find the polynomial $P$ interpolating the evaluation points,
 then use rational fraction reconstruction to find a rational fraction
 congruent to $P$ modulo the polynomial vanishing on the points. The
 first phase is carried out through any classical interpolation
-algorithm, while the second is an XGCD computation. See
+algorithm, while the second is similar to an XGCD computation. See
 \cite[$\S$5.8]{vzGG} for details.
 
 Cauchy interpolation needs $n+2$ points to reconstruct a degree
@@ -217,7 +218,7 @@ is known.
 \subsection{Complexity analysis}
 \label{sec:C2:complexity}
 Analysing the complexity of C2 is a delicate matter since the
-algorithm relies on some unspecified computer algebra algorithms in
+algorithm relies on some black-box computer algebra algorithms in
 order to deal with finite extensions of $\F_q$. The choice of the
 actual algorithms may strongly influence the overall complexity of C2.
 In this section we will only give some lower bounds on the complexity
@@ -228,15 +229,15 @@ out in Section \ref{sec:C2-AS}.
 Applying Gunji formulae first requires to find $c$ and $c'$, $p-1$-th
 roots of $H_E$ and $H_{E'}$, and build the field extension $\F_q[c] =
 \F_q[c']$. Independently of the actual algorithm used, observe that in
-the worst case $F_q[c]$ is a degree $p-1$ extension of $F_q$, thus
+the worst case $\F_q[c]$ is a degree $p-1$ extension of $\F_q$, thus
 simply representing one of its elements requires $\Theta(pd)$ elements
 of $\F_p$.
 
 Subsequently, the main cost in Gunji's formulae is the computation of
 the determinant of a $\frac{p-1}{2}\times\frac{p-1}{2}$
 quadri-diagonal matrix (see \cite{Gun76}). This takes $\Theta(p^2)$
-operations in $\F_q[c]$, that is no less than $\Omega(p^3d)$
-operations in $\F_p$.
+operations in $\F_q[c]$ by Gauss elimination, that is no less than
+$\Omega(p^3d)$ operations in $\F_p$.
 
 \paragraph{$p^k$-torsion}
 During the $p$-descent, factoring of equations \eqref{th:voloch:cover}
@@ -278,15 +279,15 @@ this case is.
 
 Thus for any elliptic curve there is an $i_0$ such that $[\U_i:\U_1] =
 p^{i-i_0}$ for any $i \ge i_0$. This shows that the worse and the
-average case coincide since asymptotically $[\U_k:\U_1] \in
-\Theta(p^k)$. In this situation, one needs $\Theta(p^kd)$ elements of
-$\F_p$ to store an element of $\U_k$.
+average case coincide since for any fixed curve $[\U_k:\U_1] \in
+\Theta(p^k)$ asymptotically. In this situation, one needs
+$\Theta(p^kd)$ elements of $\F_p$ to store an element of $\U_k$.
 
 Now the last iteration of the $p$-descent needs to solve an
 Artin-Schreier equation in $\U_k$. To do this C2 precomputes the
-matrix of the $F_q$-linear application $(x^q-x):\U_k\rightarrow\U_k$
-and its inverse, plus the matrix of the $F_p$-linear application
-$(x_p-x):\F_q\rightarrow\F_q$ and its inverse. The former is the most
+matrix of the $\F_q$-linear application $(x^q-x):\U_k\rightarrow\U_k$
+and its inverse, plus the matrix of the $\F_p$-linear application
+$(x^p-x):\F_q\rightarrow\F_q$ and its inverse. The former is the most
 expensive one and takes $\Theta(p^{\omega k})$ operations in $\F_q$,
 that is $\Omega(p^{\omega k}d) = \Omega(\ell^\omega d)$ operations in
 $\F_p$, plus a storage of $\Theta(\ell^2d)$ elements of
@@ -303,11 +304,11 @@ The most expensive part of Cauchy interpolation is the polynomial
 interpolation phase. In fact, simply representing a polynomial of
 degree $p^k-1$ in $\U_k[X]$ takes $\Theta(p^{2k}d)$ elements, thus at
 least $\Omega(\ell^2d)$ operations are needed to interpolate unless
-special care is taken. Mistakingly, this contribution due to
-arithmetics in $\U_k$ had been underestimated in the complexity
-analysis of \cite{Cou96}, thus leading to the wrong complexity
-estimate of $\Omega(\ell d\log\ell)$ for this phase. We will give more
-details on interpolation in Section \ref{sec:C2-AS-FI}.
+special care is taken. This contribution due to arithmetics in $\U_k$
+had been underestimated in the complexity analysis of \cite{Cou96},
+thus leading to the wrong complexity estimate of $\Omega(\ell
+d\log\ell)$ for this phase. We will give more details on interpolation
+in Section \ref{sec:C2-AS-FI}.
 
 
 \paragraph{Recognising the isogeny}
@@ -328,7 +329,7 @@ bound
 \end{equation}
 plus a precomputation step whose cost is negligible compared to this
 one and a space requirement of $\Theta(\ell^2d)$ elements. In the next
-sections we will see how to make all this costs drop.
+sections we will see how to make all these costs drop.
 
 
 \subsection{The case $(p,\ell)\ne1$}

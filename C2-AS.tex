@@ -49,18 +49,19 @@ certainly not optimal, yet this phase will have negligible cost
 compared to the rest of the algorithm.
 
 Now we can compute $c$ and $c'$ by factoring the polynomials
-$X^{p-1}-H_E$ and $X^{p-1}-H_{E'}$ in $\F_p[X]/Q_1(X)$. This costs
-$O\bigl(pd\Mult(p^2d)\log^2 p\bigr)$ using \cite[Coro.  14.16]{vzGG}
-again.
+$Y^{p-1}-H_E$ and $Y^{p-1}-H_{E'}$ in $\F_p[X]/Q_1(X)$. This costs
+\[O\bigl((p\ModComp(pd) + \ModComp(p)\Mult(pd) + \Mult(p)\Mult(pd)\log
+p)(\log^2 p+\log d)\bigr)\]
+using \cite[Section 3]{KS97}.
 
 Finally, computing the determinants needed by Gunji's formulae takes
 $\Theta(p^2)$ multiplications in $\F_q[c]$, that is
 $\Theta\bigl(p^2\Mult(pd)\bigr)$.
 
-The overall cost of this phase is
+Letting out logarithmic factors, the overall cost of this phase is
 \begin{equation}
   \label{eq:gunji-complexity}
-  O\bigl(pd\Mult(pd^2)\log d\log p + pd\Mult(p^2d)\log^2 p + (pd)^\omega \bigr)
+  \tildO\bigl(p^2d^3 + p\ModComp(pd) + \ModComp(p)pd + (pd)^\omega \bigr)
 \end{equation}
 
 
@@ -74,26 +75,29 @@ $\U_2,\ldots,\U_k$
 \end{enumerate}
 If we assume the worst case where $[\U_2:\U_1] = p$, according to
 \cite[Th. 13]{DFS09} the first step costs
-\begin{align*}
-  &O\bigl((pd)^\omega k + {\sf PT}(k-1) + \Mult(p^{k+1}d)\log p\bigr)
-  &&\text{where}\\
-  &{\sf PT}(i) = O\bigl(pi^2{\sf L}(i) + pd\Mult(p^{i+1}d)\log p\bigr)
-  &&\text{and}\\
-  &{\sf L}(i) = O\bigl(p^{i+2}d\log_p^2{p^{i+1}d} + p\Mult(p^{i+1}d)\bigr)
-  &&\text{;}
-\end{align*}
+\begin{gather*}
+  O\bigl((pd)^\omega k + {\sf PT}(k-1) + \Mult(p^{k+1}d)\log p\bigr)\\[0.3cm]
+  \begin{aligned}
+    \text{where}&&
+    {\sf PT}(i) &= O\bigl(pi^2{\sf L}(i) + pd\Mult(p^{i+1}d)\log p\bigr)\\
+    \text{and}&&
+    {\sf L}(i) &= O\bigl(p^{i+2}d\log_p^2{p^{i+1}d} + p\Mult(p^{i+1}d)\bigr)
+    \text{ ;}
+  \end{aligned}
+\end{gather*}
 while the second takes the GCD of two degree $p$ polynomials in
 $\U_i[X]$ for each $i$ (see Section \ref{sec:implementation}), at a
 cost of $O\bigl(\Mult(p^{k+1}d)\log p\bigr)$ operations using a fast
 algorithm \cite[$\S$11.1]{vzGG}.
 
-Summing up the contributions, the total cost of this phase is
-\begin{multline}
+Summing up the contributions, the total cost of this phase up to
+logarithmic factors is
+\begin{equation}
   \label{eq:C2-AS:complexity:p^k}
-  O\bigl((pd)^\omega \log_p\ell + p^2\ell d(\log_p(\ell d)\log_p\ell)^2 + p^2\Mult(\ell d)\log_p^2\ell +\\
-  pd\Mult(\ell d)\log p + \Mult(p\ell d)\log p\bigr)
+  \tildO_{p,d,\log\ell}\bigl((pd)^\omega \log_p\ell + p^2\ell d\log_p^4\ell +
+  p\ell d^2\log\ell + p\ell d\log\ell\bigr)
   \;\text{.}  
-\end{multline}
+\end{equation}
 Also notice that there is no more need to store a $p^{k-1}d\times
 p^{k-1}d$ matrix to solve the Artin-Schreier equation, thus the space
 requirements are not anymore quadratic in $\ell$.
@@ -102,8 +106,9 @@ requirements are not anymore quadratic in $\ell$.
 \paragraph{Interpolation}
 The interpolation phase is not essentially changed: one needs first to
 interpolate a degree $p^k-1$ polynomial with coefficients in $\U_k$,
-then convert it to a polynomial in $\F_q[X]$ and finally do a rational
-fraction reconstruction.
+then use \cite[\alg{Push-down}]{DFS09} to obtain the corresponding
+polynomial in $\F_q[X]$ and finally do a rational fraction
+reconstruction.
 
 The first step costs $O\bigl(\Mult(p^{2k}d)\log p^k\bigr)$ using fast techniques
 as \cite[$\S$10.2]{vzGG}, then converting to $\F_q[c][X]$ takes

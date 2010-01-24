@@ -1,6 +1,6 @@
 \section{Preliminaries on Isogenies}
 
-Let $E$ be an ordinary elliptic curve over the field $\F_q$, we
+Let $E$ be an ordinary elliptic curve over the field $\F_q$. We
 suppose it is given to us as the locus of zeroes of an affine
 Weierstrass equation
 \[y^2 + a_1xy + a_3y = x^3 + a_2x^2 + a_4x + a_6
@@ -34,12 +34,11 @@ forms.
 
 \paragraph{Isogenies}
 Elliptic curves are endowed with the classic group structure through
-the chord-tangent law. A group morphism having finite kernel and
-sending $\0$ over $\0$ is called an \emph{isogeny}. An isogeny whose
-kernel has cardinality $\ell$ is called a degree $\ell$ isogeny or
-simply an $\ell$-isogeny. Isogenies are algebraic maps, as such they
-can be represented by rational functions. An isogeny is said to be
-$\K$-rational if it is $\K$-rational as algebraic map.
+the chord-tangent law. A group morphism having finite kernel is called
+an \emph{isogeny}. Isogenies are regular maps, as such they can be
+represented by rational functions. An isogeny is said to be
+$\K$-rational if it is $\K$-rational as regular map; its degree is the
+degree of the regular map.
 
 One important property about isogenies is that they factor the
 multiplication-by-$m$ map.
@@ -52,7 +51,7 @@ multiplication-by-$m$ map.
   [m]_{E'}\]
 \end{definition}
 
-As algebraic maps, isogenies can be separable, inseparable or purely
+As regular maps, isogenies can be separable, inseparable or purely
 inseparable. In the case of finite fields, purely inseparable
 isogenies are easily understood as powers of the frobenius map. Let
 \[E^{(p)} : y^2 + a_1^pxy + a_3^py = x^3 + a_2^px^2 + a_4^px + a_6^p\]
@@ -74,6 +73,7 @@ $E'(\clot{\F_q})$ such that the map it defines is an isogeny.
   \[\xymatrix{
     E \ar[r]^{[m]}\ar@/_1pc/[rrr]_{\I'} & E \ar[r]^\I & E' \ar[r]^{\frobisog^n} & E'^{(p^n)}\\
   }\]
+  \label{fig:fact}
   \caption{Factorization of an isogeny. $\I'$ has kernel $E[m]\oplus\ker\I$.}
 \end{figure}
 
@@ -81,17 +81,18 @@ Since an isogeny can be uniquely factored in the product of a
 separable and a purely inseparable isogeny, we focus ourselves on the
 problem of computing explicit separable isogenies. Furthermore one can
 factor out multiplication-by-$m$ maps, thus reducing the problem to
-compute explicit separable isogenies with cyclic kernel.
+compute explicit separable isogenies with cyclic kernel (see figure
+\ref{fig:fact}).
 
 In the rest of this paper, unless otherwise stated, by $\ell$-isogeny
 we mean a separable isogeny with kernel isomorphic to $\Z/\ell\Z$.
 
 \paragraph{Vélu formulae}
 For any finite subgroup $G \subset E(\clot{\K})$, Vélu formulae
-\cite{Vel71} give an elliptic curve $\bar{E}$ and an explicit
-isogeny in a canonical way. The isogeny is $\K$-rational if and only
-if the polynomial vanishing on the abscissae of $G$ belongs to
-$\K[X]$.
+\cite{Vel71} give in a canonical way an elliptic curve $\bar{E}$ and
+an explicit isogeny $\I:E\rightarrow \bar{E}$ such that
+$\ker\I=G$. The isogeny is $\K$-rational if and only if the polynomial
+vanishing on the abscissae of $G$ belongs to $\K[X]$.
 
 In practice, if $E$ is defined over $\F_q$ and if
 \[h(X) = \prod_{\substack{P\in G\\P\ne\0}}(X - x(P)) \in \F_q[X]\]
