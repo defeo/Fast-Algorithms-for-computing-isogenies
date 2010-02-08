@@ -73,13 +73,13 @@ $\U_2,\ldots,\U_k$
   Artin-Schreier polynomial,
 \item to solve the system \eqref{th:voloch:isom}.
 \end{enumerate}
-If we assume the worst case where $[\U_2:\U_1] = p$, according to
-\cite[Th. 13]{DFS09} the first step costs
+If we assume the worst case $[\U_2:\U_1] = p$, according to
+\cite[Th. 13]{DFS09}, at each level $i$ the first step costs
 \begin{gather*}
-  O\bigl((pd)^\omega k + {\sf PT}(k-1) + \Mult(p^{k+1}d)\log p\bigr)\\[0.3cm]
+  O\bigl((pd)^\omega i + {\sf PT}(i-1) + \Mult(p^{i+1}d)\log p\bigr)\\[0.3cm]
   \begin{aligned}
     \text{where}&&
-    {\sf PT}(i) &= O\bigl(pi^2{\sf L}(i) + pd\Mult(p^{i+1}d)\log p\bigr)\\
+    {\sf PT}(i) &= O\bigl((pi + \log(d))i{\sf L}(i) + p^i\ModComp(pd)\log^2(pd)\bigr)\\
     \text{and}&&
     {\sf L}(i) &= O\bigl(p^{i+2}d\log_p^2{p^{i+1}d} + p\Mult(p^{i+1}d)\bigr)
     \text{ ;}
@@ -87,15 +87,15 @@ If we assume the worst case where $[\U_2:\U_1] = p$, according to
 \end{gather*}
 while the second takes the GCD of two degree $p$ polynomials in
 $\U_i[X]$ for each $i$ (see Section \ref{sec:implementation}), at a
-cost of $O\bigl(\Mult(p^{k+1}d)\log p\bigr)$ operations using a fast
+cost of $O\bigl(\Mult(p^{i+1}d)\log p\bigr)$ operations using a fast
 algorithm \cite[$\S$11.1]{vzGG}.
 
-Summing up the contributions, the total cost of this phase up to
-logarithmic factors is
+Summing up over $i$, the total cost of this phase up to logarithmic
+factors is
 \begin{equation}
   \label{eq:C2-AS:complexity:p^k}
-  \tildO_{p,d,\log\ell}\bigl((pd)^\omega \log_p\ell + p^2\ell d\log_p^4\ell +
-  p\ell d^2\log\ell + p\ell d\log\ell\bigr)
+  \tildO_{p,d,\log\ell}\left((pd)^\omega \log_p^2\ell + p^2\ell d\log_p^4\ell +
+  \frac{\ell}{p}\ModComp(pd)\right)
   \;\text{.}  
 \end{equation}
 Also notice that there is no more need to store a $p^{k-1}d\times

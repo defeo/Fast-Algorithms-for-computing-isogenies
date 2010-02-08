@@ -61,11 +61,9 @@ Section \ref{sec:C2-AS}. We refer to this variant as ``C2-AS''.
 In the present paper we give a complete review of Couveignes'
 algorithm, we present new variants that reach the foreseen quadratic
 bound in $\ell^2$ and prove an accurate complexity estimate which
-doesn't suppose $p$ to be fixed. In Section \ref{sec:bounded} we also
-extend the algorithm beyond its original scope to solve the more
-general problem of \emph{smallest degree isogeny finding};
-interestingly, this new algorithm turns out to have a better
-asymptotic complexity than any previously known approach.
+doesn't suppose $p$ to be fixed. We also run experiments to compare
+the performances of the state-of-the-art algorithms to compute
+isogenies in small characteristic.
 
 \paragraph{Notation and plan}
 In the rest of the paper $p$ is a prime, $d$ a positive integer,
@@ -99,14 +97,21 @@ $O(n\log n\log\log n)$ for FFT multiplication. Similarly, we let
 $\ModComp:\N\rightarrow\N$ be the complexity of \emph{modular
   composition}, that is a function such that $\ModComp(n)$ is the
 number of field operations needed to compute $f\circ g\bmod h$ for
-$f,g,h\in\K[X]$ of degree at most $n$. The most commonly used
-algorithm for modular composition is \cite{BrKu78}, which implies
-$\ModComp(n)\in O\left(n^{\frac{\omega+1}{2}}\right)$; the recent work
-of Umans \cite{Uma09} shows that $\ModComp(n)\in
-O\left(n^{1+\varepsilon}\right)$ for any $\varepsilon>0$, however this
-algorithm doesn't seem to be efficient in practice.
+$f,g,h\in\K[X]$ of degree at most $n$. The best known algorithm
+is~\cite{BrKu78}, this implies $\ModComp(n)\in
+O\left(n^{\frac{\omega+1}{2}}\right)$. Note that in a boolean RAM
+model, the algorithm of~\cite{KeUm08} takes quasi-linear time.
 
-The plan is the following. \todo
+\paragraph{Organisation of the paper}
+In Section~\ref{sec:preliminaries} we give preliminaries on elliptic
+curves and isogenies. In Sections~\ref{sec:C2}
+through~\ref{sec:C2-AS-FI-MC} we develop the algorithm C2 and we
+incrementally improve it by giving a new faster variant in each
+Section. Section~\ref{sec:implementation} gives technical details on
+our implementations of the algorithms of this paper and
+of~\cite{LeSi09}. Finally in Section~\ref{sec:benchmarks} we the
+results of the experiments we ran on our implementations.
+
 
 
 % Local Variables:

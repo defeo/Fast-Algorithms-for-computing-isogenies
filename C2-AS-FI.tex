@@ -6,9 +6,9 @@ which is part of the Cauchy interpolation. If we use a standard
 interpolation algorithm, its input consists in a list of $\Theta(p^k)$
 pairs $\bigl(P, \I(P)\bigr)$ with $P\in\U_k$, thus a lower bound for
 any such algorithm is $\Omega(p^{2k}d)$. Notice however that the
-output is a polynomial of degree $\Theta(p^k)$ in $\F_q[X]$, hence if
-supplied it with a shorter input an \emph{ad hoc} algorithm could
-reach the bound $\Omega(p^kd)$.
+output is a polynomial of degree $\Theta(p^k)$ in $\F_q[X]$, hence, if
+supplied with a shorter input, an \emph{ad hoc} algorithm could reach
+the bound $\Omega(p^kd)$.
 
 In this section we give an algorithm that reaches this bound up to
 some logarithmic factors. It realizes the polynomial interpolation on
@@ -112,7 +112,7 @@ simply gives
   A_0^{(k)} = x\bigl(\I(P)\bigr)
   \;\text{.}
 \end{equation}
-Then suppose we know $A_0^{(i+1)}$ and decompose the embedding
+Then suppose we know $A_0^{(i+1)}$, and decompose the embedding
 $\iota_i$ as
 \begin{equation}
   \xymatrix{
@@ -158,7 +158,7 @@ following
   compute
   \begin{enumerate}
   \item\label{alg:T:gal} $T_{\bar\sigma(0)}^{(i+1)} :=
-    \sigma\left(T_0^{(i+1)}\right)$ and,
+    \sigma\left(T_0^{(i+1)}\right)$ and
   \item\label{alg:A:gal} $A_{\bar\sigma(0)}^{(i+1)} :=
     \sigma\left(A_0^{(i+1)}\right)$ using
     \cite[\alg{IterFrobenius}]{DFS09},
@@ -173,9 +173,8 @@ following
 
 Steps \ref{alg:T:gal} and \ref{alg:A:gal} are identical. Both are
 repeated $p$ times, each iteration taking $O\bigl(p^{k-i}{\sf
-  L}(i-i_0)\bigr) \subset O\bigl({\sf L}(k-i_0)\bigr)$ by an easy
-refinement of \cite[Th. 11]{DFS09} \todo one day we'll publish the
-long version \todo
+  L}(i-i_0)\bigr) \subset O\bigl({\sf L}(k-i_0)\bigr)$ by
+\cite[Th. 17]{DFS09}.
 
 Step \ref{alg:T:prod} takes $O\bigl(\Mult(p^{k-i_0+1}d/r)\log p\bigr)$
 by \cite[Lemma 10.4]{vzGG} and step \ref{alg:A:CRA} has the same
@@ -186,18 +185,19 @@ Step \ref{alg:T:push} takes $O\bigl(p^{k-i+1}{\sf L}(i-i_0)\bigr)
 
 When $i=0$ and $\U_1\ne\F_q$ the algorithm is identical but steps
 \ref{alg:T:gal} and \ref{alg:A:gal} must be computed through a generic
-frobenius algorithm (applying a $q$-power, for example) and step
-\ref{alg:T:push} must use the implementation of $F_q[c]$ to make the
-conversion (for example, linear algebra). In this case steps
+frobenius algorithm (using~\cite[Algorithm 5.2]{vzGS92}, for example)
+and step \ref{alg:T:push} must use the implementation of $F_q[c]$ to
+make the conversion (for example, linear algebra). In this case steps
 \ref{alg:T:gal} and \ref{alg:A:gal} cost
-$\Theta\bigl(\frac{p^{k-i_0}}{r}\Mult(pd)\log q \bigr)$ and step
-\ref{alg:T:push} costs $\Theta\bigl(p^{k-i_0}(pd)^2\bigr)$.
+$\Theta\bigl(\frac{p^{k-i_0}}{r}\ModComp(pd)\log d \bigr)$
+by~\cite[Lemma 5.3]{vzGS92} and step \ref{alg:T:push} costs
+$\Theta\bigl(p^{k-i_0}(pd)^2\bigr)$.
 
 The total cost of the algorithm is then
 \begin{equation*}
   \label{eq:T:complexity}
   O\left(\bigl(k-i_0\bigr)\bigl(p{\sf L}(k-i_0) + \Mult(p^{k-i_0+1}d/r)\log p\bigr) +
-    \frac{p^{k-i_0}}{r}\bigl(\Mult(pd)\log q + r(pd)^2\bigr) \right)
+    \frac{p^{k-i_0}}{r}\bigl(\ModComp(pd)\log d + r(pd)^2\bigr) \right)
   \;\text{.}
 \end{equation*}
 
@@ -214,7 +214,7 @@ p^{i_0-1}r\bigr)$. The total cost of the whole interpolation phase is
 then
 \begin{equation*}
   O\left(\bigl(k-i_0\bigr) \bigl(p{\sf L}(k) + \Mult(p^kd)\log p\bigr) +
-    p^{k-1}\Mult(pd)\log q + p^k(pd)^2 + i_0\Mult(p^kd)\log p
+    p^{k-1}\ModComp(pd)\log d + p^{k-1}r(pd)^2 + i_0\Mult(p^kd)\log p
   \right)
   \;\text{,}
 \end{equation*}
@@ -223,8 +223,8 @@ that is
   \label{eq:interp}
   O\left(p{\sf L}(k)\log\left(\frac{\ell}{p^{i_0}}\right) + 
     \Mult(\ell d)\log\ell\log p +
-    \frac{\ell d}{p}\Mult(pd)\log p +
-    \ell(pd)^2
+    \frac{\ell}{p}\ModComp(pd)\log d +
+    \ell (pd)^2
   \right)
   \;\text{.}
 \end{equation}
@@ -237,7 +237,7 @@ $A_0^{(0)}=A$. From a practical point of view, though, Brent's and
 Kung's algorithm for modular composition \cite{BrKu78}, despite having
 a worse asymptotic complexity, could perform faster for some set of
 parameters. We will discuss this matter in Section
-\ref{sec:implementation}.
+\ref{sec:C2-AS-FI-MC}.
 
 If more than $\euler(p^k)/2$ points are needed, but less than
 $\frac{p-1}{2}$, one can use the previous algorithm to compute all the
@@ -257,21 +257,11 @@ have the following.
   \begin{equation*}
     \tildO_{p,d,\log\ell}\left(
       p^2d^3 +
-      p^3d^2 +
-      (pd)^\omega\log\ell +
+      \ModComp(p)pd +
+      (pd)^\omega\log^2\ell +
       p^3\ell^2 d\log^3\ell + 
-      p^2\ell^2 d^2
-    \right)
-    \;\text{,}
-  \end{equation*}
-  or
-  \begin{equation*}
-    \tildO\left(
-      p^2d^3 +
-      p^3d^2 +
-      (pd)^\omega +
-      p^3\ell^2 d + 
-      p^2\ell^2 d^2
+      p^2\ell^2 d^2+
+      \left(\frac{\ell^2}{p} + p\right)\ModComp(pd)
     \right)
     \;\text{.}
   \end{equation*}
