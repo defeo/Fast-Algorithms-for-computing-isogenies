@@ -62,8 +62,7 @@ In the present paper we give a complete review of Couveignes'
 algorithm, we present new variants that reach the foreseen quadratic
 bound in $\ell^2$ and prove an accurate complexity estimate which
 doesn't suppose $p$ to be fixed. We also run experiments to compare
-the performances of the state-of-the-art algorithms to compute
-isogenies in small characteristic.
+the performances of C2 with other algorithms.
 
 \paragraph{Notation and plan}
 In the rest of the paper $p$ is a prime, $d$ a positive integer,
@@ -97,10 +96,11 @@ $O(n\log n\log\log n)$ for FFT multiplication. Similarly, we let
 $\ModComp:\N\rightarrow\N$ be the complexity of \emph{modular
   composition}, that is a function such that $\ModComp(n)$ is the
 number of field operations needed to compute $f\circ g\bmod h$ for
-$f,g,h\in\K[X]$ of degree at most $n$. The best known algorithm
-is~\cite{BrKu78}, this implies $\ModComp(n)\in
-O\left(n^{\frac{\omega+1}{2}}\right)$. Note that in a boolean RAM
-model, the algorithm of~\cite{KeUm08} takes quasi-linear time.
+$f,g,h\in\K[X]$ of degree at most $n$ with coefficients in an
+arbitrary field $\K$. The best known algorithm is~\cite{BrKu78}, this
+implies $\ModComp(n)\in O\left(n^{\frac{\omega+1}{2}}\right)$. Note
+that in a boolean RAM model, the algorithm of~\cite{KeUm08} takes
+quasi-linear time.
 
 \paragraph{Organisation of the paper}
 In Section~\ref{sec:preliminaries} we give preliminaries on elliptic
@@ -109,8 +109,8 @@ through~\ref{sec:C2-AS-FI-MC} we develop the algorithm C2 and we
 incrementally improve it by giving a new faster variant in each
 Section. Section~\ref{sec:implementation} gives technical details on
 our implementations of the algorithms of this paper and
-of~\cite{LeSi09}. Finally in Section~\ref{sec:benchmarks} we the
-results of the experiments we ran on our implementations.
+of~\cite{LeSi09}. Finally in Section~\ref{sec:benchmarks} we comment
+the results of the experiments we ran on our implementations.
 
 
 
