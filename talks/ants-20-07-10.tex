@@ -1,0 +1,200 @@
+\documentclass[10pt]{beamer}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[all]{xy}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{trees}
+
+%% Stuff
+\renewcommand{\le}{\leqslant}
+\renewcommand{\ge}{\geqslant}  % comme François le demande...
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}  % colouring
+%% Algèbre
+\newcommand{\clot}[1]{\bar{#1}}  % clôture algèbrique
+\newcommand{\card}[1]{\# #1}  % cardinalité d'un ensemble
+\DeclareMathOperator{\car}{char}  % caractéristique d'un corps
+\DeclareMathOperator{\Frac}{Frac}  % corps des fractions
+\newcommand{\Z}{\mathbb{Z}}  % les entiers
+\newcommand{\K}{\mathbb{K}}  % un corps
+\newcommand{\LK}{\mathbb{L}}  % encore un corps
+\newcommand{\U}{\mathbb{U}}  % encore un corps
+\newcommand{\F}{\mathbb{F}}  % un corps fini
+\newcommand{\Q}{\mathbb{Q}}  % les rationnels
+\newcommand{\R}{\mathbb{R}}  % les réels
+\newcommand{\C}{\mathbb{C}}  % les complexes
+\newcommand{\isom}{\cong}  % isomorphisme de corps
+\newcommand{\frob}{\varphi}  % fröbenius
+\DeclareMathOperator{\Gal}{Gal}  % groupe de Galois
+\DeclareMathOperator{\Tr}{Tr}  % trace
+\DeclareMathOperator{\PTr}{PTr}  % pseudotrace
+\DeclareMathOperator{\Norm}{N} % norme
+\newcommand{\euler}{\phi}  % indicatrice d'Euler
+\DeclareMathOperator{\ord}{ord}  % l'ordre d'un élément
+\newcommand{\AS}[1]{\mathcal{#1}}  % la police des polynômes d'AS
+\DeclareMathOperator{\rev}{rev}  % le reverse d'un polynôme
+%% Courbes
+\DeclareMathOperator{\Jac}{Jac}  % la jacobienne
+\newcommand{\Proj}{\mathbb{P}}  % espace projectif
+\newcommand{\0}{\mathcal{O}}  % point de base d'une courbe
+\newcommand{\ecpoint}[3]{[#1:#2:#3]}  % un point d'une courbe
+\newcommand{\isog}[1]{\mathcal{#1}}  % la police des isogénies
+\newcommand{\I}{\isog{I}}  % une isogénie I
+\newcommand{\Hasse}{H}  % l'invariant de Hasse
+\newcommand{\divpol}{f}  % polynôme de division
+%% Autre
+\newcommand{\tildO}{\tilde{O}}  % la notation O~ qui oublie les log
+\newcommand{\Mint}{\mathrm{\sf M}_\text{int}}  % fonction de multiplication
+\newcommand{\Mpol}[1][]{\mathrm{\sf M}_\text{pol}^{#1}}  % fonction de multiplication
+\newcommand{\Mult}[1][]{\mathrm{\sf M}_{#1}}  % fonction de multiplication
+\newcommand{\Push}{\mathrm{\sf P}}  % fonction de push-down
+\newcommand{\Lift}{\mathrm{\sf L}}  % fonction de lift-up
+\newcommand{\Trace}{\mathrm{\sf T}}  % fonction de trace
+\newcommand{\Frob}{\mathrm{\sf F}}  % fonction de frobenius itéré
+\newcommand{\Ptr}{\mathrm{\sf PT}}  % fonction de pseudo-trace
+\newcommand{\ModComp}{\mathrm{\sf C}}  % fonction de composition modulaire
+\newcommand{\alg}[1]{\textsf{#1}}  % la police des algorithmes
+\newcommand{\wrt}{\dashv}  % appartenance forte, a\wrt A signifie que a est représenté comme un élément de A
+\DeclareMathOperator{\op}{op}  % une opération
+
+\newenvironment{algorithm}[3]{\begin{center}\begin{minipage}{0.85\textwidth}
+      \sf
+      \rule{\textwidth}{0.2pt}\\
+      \makebox[\textwidth][c]{\textbf{#1}}\\
+      \rule[0.5\baselineskip]{\textwidth}{0.2pt}\\
+      \textbf{Input~~} #2\\
+      \textbf{Output} #3
+      \smallskip
+      \begin{enumerate}
+}{\end{enumerate}
+      \rule{\textwidth}{0.2pt}
+\end{minipage}\end{center}}
+
+% beamer-specific
+%\setbeamertemplate{theorem begin}{
+%  \begin{\inserttheoremblockenv}{
+%      Théorème
+%      \ifthenelse{\equal{\inserttheoremaddition}{}}
+%		 {}
+%		 {(\inserttheoremaddition)}    
+		 %  \ifx\inserttheoremaddition\@empty\else\ (\inserttheoremaddition)\fi
+%    }
+%}
+
+
+\title{Couveignes' surprise}
+\author[L.~De~Feo]{L.~De~Feo}
+\institute[TANC, LIX]{INRIA Projet TANC \& LIX École Polytechnique}
+\date[ANTS IX, Nancy, July 20, 2010]{July 20, 2010\\ANTS XI, LORIA, Nancy}
+
+
+% \AtBeginSection[]
+% {
+%   \begin{frame}<beamer>
+%     \frametitle{Plan}
+%     \tableofcontents[currentsection]
+%   \end{frame}
+% }
+
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Couveignes' algorithm}
+  
+  \begin{itemize}
+  \item<1-> Compute an isogeny
+    \[\xymatrix{E \ar[r]^{\I} & E'}\]
+    $\I$ has degree $\ell$, $p$ is small.
+  \item<2-> Interpolate (the abscissae)
+    \[\xymatrix{E[p^k] \ar[r]^{\I} & E'[p^k]}\]
+    for $k$ big enough \alert{($p^k \gg \ell$)}.
+  \item<3-> How? Pick up $P\in E[p^k]$ and $P'\in P[p^k]$ and make a guess
+    \[\xymatrix{P \ar@{|->}[r]^{\I} & P'}\]
+  \item<4-> If it doesn't work, pick another
+    $P$'. \uncover<5->{\alert{Again and again...}}
+  \end{itemize}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{How to know when a polynomial is an isogeny?}
+  
+  \[T = \prod_n (X - [n]P)\]
+  \[A_{P'} : [n]P \mapsto [n]P'\]
+
+  \begin{itemize}
+  \item<2-> If $A_{P'}$ corresponds to an isogeny
+    \[A_{P'}(X) \equiv \alert<3>{\frac{g(X)}{h(X)}} \bmod T(X)\] with
+    \alert{$\deg g = \ell$} and \alert{$\deg h = \ell-1$} and $h$ is a
+    square.
+  \item<3-> Compute $\frac{g}{h}$ by rational fraction
+    reconstruction. This is just
+    \[\alert{\mathrm{XGCD}(A_{P'},T)}\]
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What happens when you do the XGCD for an isogeny?}
+
+  \[AU_i + TV_i = R_i  \qquad\Leftrightarrow\qquad  A\equiv \frac{R_i}{U_i} \bmod T\]
+
+  \pause
+
+  \begin{center}
+  \begin{tabular}{c | c}
+    $\deg R_i$ & $\deg U_i$ \\
+    \pause
+    $n$ & 0 \\
+    \pause
+    \alt<7>{\huge $n-1$}{$n-1$} & 1 \\
+    \pause
+    $n-2$ & \alt<7>{\huge $2$}{$2$} \\
+    \pause
+    \vdots & \vdots\\
+    $n-\ell+2$ & $\ell-2$ \\
+    \pause\pause
+    \Huge\alert{$\ell$} & \Huge\alert{$\ell-1$}\\
+    \pause
+    $\ell-1$ & $n-\ell+1$\\
+    \vdots & \vdots
+  \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Getting all the isogenies}
+
+  \begin{itemize}
+  \item<1-5> This pattern is extremely rare.
+  \item<2> \large This is the only part of the computation that depends on $\ell$.
+  \item<3> \Large It actually doesn't really depend on $\ell$, just on the
+    \alert{leap}.
+  \item<4> \huge If we don't know $\ell$ in advance, we just wait for
+    a leap.
+  \item<5-> \alt<6>{\Huge But Why?\\[2ex] And What is this useful
+      for?}{\Huge Actually, we can just look at all the gaps and we
+      get all the isogenies with degree $\ll p^k$.}
+  \end{itemize}
+\end{frame}
+
+\end{document}
+
+
+% Local Variables:
+% mode:flyspell
+% ispell-local-dictionary:"british"
+% mode:TeX-PDF
+% End:
+%
+
+% LocalWords:  Isogeny abelian isogenies hyperelliptic supersingular Frobenius
+% LocalWords:  isogenous
