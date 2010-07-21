@@ -4,65 +4,108 @@
 The most expensive step of C2-AS is the polynomial interpolation step
 which is part of the Cauchy interpolation. If we use a standard
 interpolation algorithm, its input consists in a list of $\Theta(p^k)$
-pairs $\bigl(P, \I(P)\bigr)$ with $P\in\U_k$, thus a lower bound for
-any such algorithm is $\Omega(p^{2k}d)$. Notice however that the
-output is a polynomial of degree $\Theta(p^k)$ in $\F_q[X]$, hence, if
-supplied with a shorter input, an \emph{ad hoc} algorithm could reach
-the bound $\Omega(p^kd)$.
+pairs $\bigl(P, \I(P)\bigr)$, with $P$ having coordinates in $\U_k$,
+thus a lower bound for any such algorithm is $\Omega(p^{2k}d)$. Notice
+however that the output is a polynomial of degree $\Theta(p^k)$ in
+$\F_q[X]$, hence, if supplied with a shorter input, an \emph{ad hoc}
+algorithm could reach the bound $\Omega(p^kd)$.
 
 In this section we give an algorithm that reaches this bound up to
 some logarithmic factors. It realizes the polynomial interpolation on
 the primitive points of $E[p^k]$, thus its output is a degree
 $\euler(p^k)/2-1$ polynomial in $\F_q[X]$. Using the Chinese remainder
-theorem, it is straightforward to generalise this to an algorithm
-having the same asymptotic complexity realizing the polynomial
+theorem it is straightforward to generalise this to an algorithm,
+having the same asymptotic complexity, that realizes the polynomial
 interpolation on all the points of $E[p^k]$. We call C2-AS-FI the
 variant of C2-AS resulting from applying this new algorithm.
 
-\subsection{The algorithm}
-We set some notation. Let $i_0$ be the largest index such that
+
+\subsection{The problem}
+Let $P\in E[p^k]$ and $P'\in E'[p^k]$ be primitive $p^k$ torsion
+points. We want to compute the smallest degree polynomial
+$A\in\F_q[X]$ such that
+\begin{equation}
+  A\bigl(x\bigl([n]P\bigr)\bigr) = x\bigl([n]P'\bigr)
+  \quad\text{for any $n\in\left(\Z/p^k\Z\right)^\ast$.}
+\end{equation}
+To be more precise, we want to compute the canonical representative of
+$A$ in $\F_q[X]/T(X)$, where
+\begin{equation}
+  T(X) = \prod_{n\in\left(\Z/p^k\Z\right)^\ast} \bigl(X - x([n]P)\bigr)
+  \text{.}
+\end{equation}
+ 
+There are two equivalent ways to look at this problem. The first one
+is as the interpolation problem we just stated. The second one is as
+an isomorphism of finite fields problem. Both viewpoints will be
+important.
+
+We set some notation first. Let $i_0$ be the largest index such that
 $\U_{i_0} = \U_1$ and let $\frac{p-1}{2r} = [\F_q[c^2]:\F_q]$. For
 notational convenience, we set $\U_0=\F_q$.
 
-We note $T(X)$ the polynomial vanishing on the primitive points of
-$E[p^k]$ and
+For any $i$, let
 
 \begin{equation}
   \label{eq:T}
   T = \prod T_j^{(i)}
 \end{equation}
-its factorisation over $\U_i$; we remark that all the $T_j^{(0)}$'s
-have degree $\frac{\euler(p^{k-i_0+1})}{2r}$. We also note $A(X)$ the goal
-polynomial and
+be the factorisation of $T$ over $\U_i$, we remark that all the
+$T_j^{(0)}$'s have degree $\frac{\euler(p^{k-i_0+1})}{2r}$. We also
+set
 \begin{equation}
   \label{eq:A}
   A_j^{(i)} = A \bmod T_j^{(i)}
   \;\text{.}
 \end{equation}
 
-It was already pointed out in \cite[$\S$2.3]{Cou96} that if all the
-$A_j^{(0)}$'s are known one can recover $A$ using the Chinese remainder
-theorem. If we chose any point $P$ such that
-$T_j^{(0)}\bigl(x(P)\bigr)=0$ and fix the embedding
+It was already pointed out in \cite[$\S$2.3]{Cou96} that, knowing the
+factorisation of $T$ over $\U_0$ and all the $A_j^{(0)}$'s, we can
+recover $A$ using the Chinese remainder theorem. Thus we will focus on
+computing, say, $A_0^{(0)}$.
+
+$T_0^{(0)}$ is irreducible over $\F_q$. Chose any root of $T_0^{(0)}$,
+without loss of generality we can take $x(P)$ to be such a root.  Fix
+the $\F_q$-linear embedding of finite fields
 \begin{equation}
   \label{eq:embed}
   \xymatrix{
-    ^{\F_q[X]}/_{T_j^{(0)}(X)} \ar@{^{(}->}[r]^-\iota & \U_k
+    ^{\F_q[X]}/_{T_0^{(0)}(X)} \ar@{^{(}->}[r]^-\iota & \U_k
   }
 \end{equation}
-given by $\iota(X) = x(P)$, then it is evident that
-$\iota\bigl(A_j^{(0)}(X)\bigr) = x\bigl(\I(P)\bigr)$, thus in order to
-compute $A_j^{(0)}$ one just needs to compute
-$\iota^{-1}\bigl(x(\I(P))\bigr)$.
+given by $\iota(X) = x(P)$. It is evident that
+\begin{equation}
+  \label{eq:embed}
+  \iota\bigl(A_0^{(0)}(X)\bigr) = A_0^{(0)}\left(\iota(X)\right)=x\bigl(P'\bigr)
+  \text{,}
+\end{equation}
+thus in order to compute $A_0^{(0)}$ one just needs to compute
+$\iota^{-1}\bigl(x(P')\bigr)$.
 
-Unfortunately, the information needed to compute $\iota$ was lost in
-the $p$-descent, for we don't even know the $T_j^{(i)}$'s. None of the
-algorithms of \cite{DFS09} helps us to compute such information and
-straightforward computation of it would be too expensive. The solution
-is to decompose $\iota$ as a chain of morphisms and invert them
-one-by-one going down in the tower $(\U_0,\U_1,\ldots,\U_k)$, this is
-similar to the way \cite{Cou00} solves an Artin-Schreier equation by
-moving it down from $\U_k$ to $\U_1$.
+This is a classic problem in computer algebra: given an algebraic
+extension $\LK/\K$ and elements $x\in\LK$ and $y\in\K[x]$, find the
+minimal polynomial $Q$ of $x$ over $\K$, identify $\K[X]/Q(X)$ to
+$\K[x]$ and find the canonical image of $y$ in $\K[X]/Q(X)$. The
+fastest techniques available are \cite{Sho99,PS06}, which are largely
+used in \cite{DFS10}. However, they both require to solve a
+\emph{power projection} problem, that is, given a $\K$-linear form
+$\ell$, compute
+\begin{equation}
+  \ell(1), \ell(x), \ell(x^2), \dots, \ell(x^n)
+\end{equation}
+up to some bound $n$. As explained in \cite{Sho99}, by the
+\emph{transposition principle}, solving the power projection has the
+same complexity as computing $g(x)$ given $g\in\K[X]$.
+
+But in our specific case the extension we work with is $\U_k/\F_q$ and
+we know (for the moment) no other method to evaluate a polynomial
+$g\in\F_q[X]$ on a point of $\U_k$, other than lift $g$ in $\U_k[X]$
+and evaluate by Horner rule. Unfortunately, this is too expensive,
+thus we will study an alternative approach that amounts to decompose
+$\iota$ as a chain of morphisms and invert them one-by-one going down
+in the tower $(\U_0,\U_1,\ldots,\U_k)$. This is similar to the way
+\cite{Cou00} solves an Artin-Schreier equation by moving it down from
+$\U_k$ to $\U_1$.
 
 \paragraph{The moduli}
 We first need to compute $T_0^{(i)}\in\U_i[X]$ for any $i$. For this
@@ -105,7 +148,7 @@ of embeddings
 \end{equation}
 given by $\iota_k\circ\cdots\circ\iota_i(X_i) = x(P)$ for any $i$.
 
-We compute $A_0^{(i)}$ by inverting the chain: inverting $\iota_k$
+e compute $A_0^{(i)}$ by inverting the chain: inverting $\iota_k$
 simply gives
 \begin{equation}
   \label{eq:A_0^k}
@@ -185,7 +228,7 @@ Step \ref{alg:T:push} takes $O\bigl(p^{k-i+1}{\sf L}(i-i_0)\bigr)
 
 When $i=0$ and $\U_1\ne\F_q$ the algorithm is identical but steps
 \ref{alg:T:gal} and \ref{alg:A:gal} must be computed through a generic
-frobenius algorithm (using~\cite[Algorithm 5.2]{vzGS92}, for example)
+Frobenius algorithm (using~\cite[Algorithm 5.2]{vzGS92}, for example)
 and step \ref{alg:T:push} must use the implementation of $F_q[c]$ to
 make the conversion (for example, linear algebra). In this case steps
 \ref{alg:T:gal} and \ref{alg:A:gal} cost
@@ -276,7 +319,7 @@ have the following.
 % TeX-master: "ec-isogeny"
 % End:
 %
-% LocalWords:  Schreier Artin pseudotrace frobenius bivariate Joux Sirvent FFT
+% LocalWords:  Schreier Artin pseudotrace Frobenius bivariate Joux Sirvent FFT
 % LocalWords:  Couveignes isogenies Schoof isogeny cryptosystems Lercier moduli
 % LocalWords:  precomputation arithmetics polylogarithmic Karatsuba embeddings
 % LocalWords:  irreducibility

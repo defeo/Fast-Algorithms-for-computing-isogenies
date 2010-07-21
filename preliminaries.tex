@@ -54,7 +54,7 @@ multiplication-by-$m$ map.
 
 As regular maps, isogenies can be separable, inseparable or purely
 inseparable. In the case of finite fields, purely inseparable
-isogenies are easily understood as powers of the frobenius map. Let
+isogenies are easily understood as powers of the Frobenius map. Let
 \[E^{(p)} : y^2 + a_1^pxy + a_3^py = x^3 + a_2^px^2 + a_4^px + a_6^p\]
 then the map
 \begin{align*}
@@ -62,7 +62,7 @@ then the map
           (x,y) &\mapsto (x^p,y^p)
 \end{align*}
 is a degree $p$ purely inseparable isogeny. Any purely inseparable
-isogeny is a composition of such frobenius isogenies.
+isogeny is a composition of such Frobenius isogenies.
 
 Let $E$ and $E'$ be two elliptic curves defined over $\F_q$, by
 finding an \emph{explicit isogeny} we mean to find an
@@ -103,8 +103,8 @@ is known, Vélu formulae compute a rational function
   \bar{\I}(x,y) = \left(\frac{g(x)}{h(x)}, \frac{k(x,y)}{l(x)}\right)  
 \end{equation}
 and a curve $\bar{E}$ such that $\bar{\I} : E\rightarrow\bar{E}$ is an
-$\F_q$-rational isogeny of kernel $G$. A consequence of Vélu formulae
-is
+$\F_q$-rational isogeny with kernel $G$. A consequence of Vélu
+formulae is
 \begin{equation}
   \label{eq:velu-deg}
   \deg g = \deg h + 1 = \card{G}
@@ -115,8 +115,8 @@ Given two curves $E$ and $E'$, Vélu formulae reduce the problem of
 finding an explicit isogeny between $E$ and $E'$ to that of finding
 the kernel of an isogeny between them. Once the polynomial $h(X)$
 vanishing on $\ker\I$ is found, the explicit isogeny is computed
-composing Vélu formulae with the isomorphism between $\bar{E}$ and
-$E'$ as in figure \ref{fig:velu}.
+composing Vélu formulae with an isomorphism between $\bar{E}$ and $E'$
+as in figure \ref{fig:velu}.
 
 \begin{figure}
   \centering
@@ -138,7 +138,7 @@ $E'$ as in figure \ref{fig:velu}.
 % TeX-master: "ec-isogeny"
 % End:
 %
-% LocalWords:  Schreier Artin pseudotrace frobenius bivariate Joux Sirvent FFT
+% LocalWords:  Schreier Artin pseudotrace Frobenius bivariate Joux Sirvent FFT
 % LocalWords:  Couveignes isogenies Schoof isogeny cryptosystems Lercier
 % LocalWords:  precomputation arithmetics polylogarithmic Karatsuba
 % LocalWords:  endomorphisms
