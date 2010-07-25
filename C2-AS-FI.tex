@@ -90,15 +90,15 @@ up to some bound $n$. As explained in \cite{Shoup99}, by the
 \emph{transposition principle}, solving the power projection has the
 same complexity as computing $g(x)$ given $g\in\K[X]$.
 
-But, in our specific case, the extension we work with is $\U_k/\F_q$ and
-we know (for the moment) no other method to evaluate a polynomial
-$g\in\F_q[X]$ on a point of $\U_k$, other than lift $g$ in $\U_k[X]$
-and evaluate by Horner rule. Unfortunately, this is too expensive,
-thus we will study an alternative approach that amounts to decompose
-$\iota$ as a chain of morphisms and invert them one-by-one going down
-in the tower $(\U_0,\U_1,\ldots,\U_k)$. This is similar to the way
-\cite{Cou00} solves an Artin-Schreier equation by moving it down from
-$\U_k$ to $\U_1$.
+But, in our specific case, the extension we work with is $\U_k/\F_q$.
+Without previous knowledge of the minimal polynomial of $x\in\U_k$, we
+have no method to evaluate a polynomial $g\in\F_q[X]$ on $x$, faster
+than lift $g$ in $\U_k[X]$ and evaluate by Horner rule. Unfortunately,
+this is too expensive, thus we will study an alternative approach that
+amounts to decompose $\iota$ as a chain of morphisms and invert them
+one-by-one going down in the tower $(\U_0,\U_1,\ldots,\U_k)$. This is
+similar to the way \cite{Cou00} solves an Artin-Schreier equation by
+moving it down from $\U_k$ to $\U_1$.
 
 
 \paragraph{Interpolation in towers of extensions}
