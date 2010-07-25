@@ -1,29 +1,112 @@
-\section{Smallest degree isogeny}
-\label{sec:bounded}
+\documentclass{article}
 
-We now present an extension to Couveignes algorithm that could be
-useful in cryptographic application. It is well known that two curves
-having the same number of points over a finite field are isogenous,
-however this doesn't say anything on the degree of the isogeny
-connecting them. Given two elliptic curves $E$ and $E'$ defined over
-$\F_q$ and having the same number of points, we want to find the
-smallest degree isogeny between them.
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{bbm}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{mdwlist}
+\usepackage{graphicx}
+\usepackage{mathrsfs}
+
+
+%% Stuff
+\renewcommand{\le}{\leqslant}
+\renewcommand{\ge}{\geqslant}  % comme François le demande...
+\newcommand{\todo}{\dots}  % un marqueur pour un trou
+%% Algèbre
+\newcommand{\trans}[1]{#1^\top}  % transposé
+\newcommand{\dual}[1]{#1^\ast}  % dual
+\newcommand{\clot}[1]{\bar{#1}}  % clôture algèbrique
+\newcommand{\card}[1]{\# #1}  % cardinalité d'un ensemble
+\DeclareMathOperator{\car}{car}  % caractéristique d'un corps
+\DeclareMathOperator{\Frac}{Frac}  % corps des fractions
+\newcommand{\N}{\mathbb{N}}  % les naturels
+\newcommand{\Z}{\mathbb{Z}}  % les entiers
+\newcommand{\K}{\mathbb{K}}  % un corps
+\newcommand{\LK}{\mathbb{L}}  % encore un corps
+\newcommand{\U}{\mathbb{U}}  % encore un corps
+\newcommand{\F}{\mathbb{F}}  % un corps fini
+\newcommand{\Q}{\mathbb{Q}}  % les rationnels
+\newcommand{\R}{\mathbb{R}}  % les réels
+\newcommand{\C}{\mathbb{C}}  % les complexes
+\newcommand{\isom}{\cong}  % isomorphisme de corps
+\newcommand{\frob}{\varphi}  % l'isomorphisme de Frobenius
+\DeclareMathOperator{\Gal}{Gal}  % groupe de Galois
+\DeclareMathOperator{\Tr}{Tr}  % trace
+\DeclareMathOperator{\PTr}{T}  % pseudotrace
+\DeclareMathOperator{\Norm}{N} % norme
+\DeclareMathOperator{\coeff}{coeff}  % coefficient
+\newcommand{\res}{\rho}  % the residue form
+\newcommand{\euler}{\phi}  % indicatrice d'Euler
+\DeclareMathOperator{\ord}{ord}  % l'ordre d'un élément
+\DeclareMathOperator{\rev}{rev}  % le reverse d'un polynôme
+\newcommand{\Cyclo}{\Phi}  % le polynome cyclotomique
+\DeclareMathOperator{\Fix}{Fix}  % les points fixes
+%% Courbes
+\newcommand{\Proj}{\mathbb{P}}  % espace projectif
+\newcommand{\0}{\mathcal{O}}  % point de base d'une courbe
+\newcommand{\ecpoint}[3]{[#1:#2:#3]}  % un point d'une courbe
+\newcommand{\isog}[1]{\mathcal{#1}}  % la police des isogénies
+\newcommand{\I}{\isog{I}}  % une isogénie I
+\newcommand{\frobisog}{\phi}  % l'isogénie de Frobenius
+\newcommand{\Hasse}{H}  % l'invariant de Hasse
+\newcommand{\divpol}{f}  % polynôme de division
+%% Autre
+\newcommand{\tildO}{\tilde{O}}  % la notation O~ qui oublie les log
+\newcommand{\Mult}{\mathrm{\sf M}}  % fonction de multiplication
+\newcommand{\ModComp}{\mathrm{\sf C}}  % fonction de composition modulaire
+\newcommand{\alg}[1]{{\sf #1}}  % la police des algorithmes
+\newcommand{\algref}[1]{\alg{\ref{#1}}}  % la police des algorithmes
+\newcommand{\wrt}{\dashv}  % appartenance forte, a\wrt A signifie que a est représenté comme un élément de A
+\newcommand{\ndiv}{\nmid}  % ne divise pas
+
+%%Théorèmes
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{corollary}[definition]{Corollary}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{problem}[definition]{Problem}
+
+
+\title{On computing isogenies of unknown degree}
+\author{Luca De Feo}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+  We present an extension to Couveignes algorithm that, given two
+  elliptic curves $E$ and $E'$, permits to compute all isogenies of
+  degrees up to a certain bound $N$ in time $\tildO(N^2)$.
+\end{abstract}
+
+It is well known that two curves having the same number of points over
+a finite field are isogenous, however this doesn't say anything on the
+degree of the isogeny connecting them. Given two elliptic curves $E$
+and $E'$ defined over $\F_q$ and having the same number of points, we
+want to find the smallest degree isogeny between them.
 
 The simplest solution is to take any algorithm computing a fixed
 degree isogeny and try all the degrees until an isogeny is found. If
 $\ell$ is the degree of the smallest isogeny, this of course adds a
 factor $\ell$ to the complexity of any polynomial time algorithm.
 
-Couveignes' algorithm can be easily adapted to solve this problem at
-no additional cost. We call this algorithm C2SD and we will only
-discuss its most efficient variant C2SD-AS-FI.
+Couveignes' algorithm \cite{Cou96}, however, can be easily adapted to
+solve this problem at no additional cost. This short paper is not
+self-contained: we make references to the variants and improvements to
+Couveignes' algorithm given in \cite{D}.
 
-Observe that, apart for the choice of $k$, the computation of $E[p^k]$
-and the polynomial interpolation step do not depend at all on
-$\ell$. The degree of the isogeny only comes into play in the last
-part of the Cauchy interpolation, that is the rational function
-reconstruction. We study more in detail this last step.
-
+Observe that in Couveignes' algorithm, apart for the choice of $k$,
+the computation of $E[p^k]$ and the polynomial interpolation step do
+not depend at all on $\ell$. The degree of the isogeny only comes into
+play in the last part of the Cauchy interpolation, that is the
+rational function reconstruction. We study more in detail this last
+step.
 
 \paragraph{Rational Function Reconstruction}
 Rational function reconstruction takes as input a degree $n$
@@ -151,24 +234,41 @@ like random polynomials, thus, by the proposition above, the
 probability that $A$ looks like an isogeny of degree
 $\ell\le\left\lfloor\frac{\deg T}{2}\right\rfloor-t$ is less than $\frac{1}{q^{2t}}$.
 
-Therefore, by choosing an appropriate $t\in O(\log_q p^k)$, C2SD can
-find any isogeny of degree less than $\frac{p^k-1}{4}-t$ at the same
-cost of one run of C2. Also notice that C2SD is not restricted to
-isogenies of degree prime to $p$ as it was already mentioned in
-Section \ref{sec:C2:non-prime}.
+Therefore, by choosing an appropriate $t\in O(\log_q p^k)$, our
+variant can find any isogeny of degree less than $\frac{p^k-1}{4}-t$
+at the same cost of one run of Couveignes' algorithm.
 
 No other method for computing isogenies is known to have a similar
-generalisation, this makes C2SD-AS-FI interesting for practical
+generalisation. This makes Couveignes' algorithm a rather surprising
+exception and we wonder whether this simple idea can find interesting
 applications.
 
+\begin{thebibliography}{9}
+\bibitem{Cou96}
+  J.-M.~Couveignes. 
+  \newblock Computing {$\ell$}-isogenies using the {$p$}-torsion.
+  \newblock in {\em ANTS'II}, 59--65. Springer, 1996.
+
+\bibitem{D}
+  L.~De~Feo.
+  \newblock Fast algorithms for computing isogenies between ordinary
+  elliptic curves in small characteristic,
+  \newblock To appear in {\em Journal of Number Theory}, 2010.
+
+\bibitem{vzGG} 
+  J.~von~zur~Gathen and J.~Gerhard. 
+  \newblock \emph{Modern Computer Algebra}. 
+  \newblock Cambridge University Press, 1999.
+
+\end{thebibliography}
 
 
+\end{document}
 
 % Local Variables:
 % mode:flyspell
 % ispell-local-dictionary:"british"
 % mode:TeX-PDF
-% TeX-master: "ec-isogeny"
 % End:
 %
 % LocalWords:  Schreier Artin pseudotrace Frobenius bivariate Joux Sirvent FFT
