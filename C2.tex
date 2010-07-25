@@ -170,9 +170,12 @@ they don't, the equation can be discarded right away and the algorithm
 can go on with the next trial. Next, one can check that $h$ is indeed
 the square of a polynomial (or, if $\ell$ is even, the product of one
 factor of the $2$-division polynomial and a square polynomial). This
-two tests are usually enough to detect an isogeny, but, should they
-lie, one can still check that the resulting rational function is
-indeed a group morphism by trying some random points on $E$.
+two tests are usually enough to detect an isogeny. In case a higher
+confidence is needed, one can evaluate the rational fraction on some
+random points of $E$ and check that it is indeed a group
+morphism. Finally, if a deterministic proof is needed, one can compute
+the $\ell$-division polynomial modulo $h$ and verify that it is equal
+to $0$.
 
 
 \subsection{The case $p=2$}
@@ -313,14 +316,18 @@ details on interpolation in Section \ref{sec:C2-AS-FI}.
 
 
 \paragraph{Recognising the isogeny}
-The cost of testing for squareness of the denominator and other tests
-is negligible compared to the rest of the algorithm. Nevertheless it
-is important to realize that on average half of the $\euler(p^k)$
-mappings from $E[p^k]$ to $E'[p^k]$ must be tried before finding the
-isogeny, for only one of these mappings corresponds to it. This
-implies that the Cauchy interpolation step must be repeated an average
-of $\Theta(p^k)$ times, thus contributing a $\Omega(\ell^3d)$ to the
-total complexity.
+The cost of testing for squareness of the denominator and of the other
+probabilistic tests is negligible compared to the rest of the
+algorithm. The cost of computing the $\ell$-division polynomial modulo
+$h$ is $O(\Mult(\ell)\log\ell)$ operations in $\F_q$, thus, again,
+negligible.
+
+Nevertheless it is important to realize that, on average, half of the
+$\euler(p^k)$ mappings from $E[p^k]$ to $E'[p^k]$ must be tried before
+finding the isogeny, for only one of these mappings corresponds to
+it. This implies that the Cauchy interpolation step must be repeated
+an average of $\Theta(p^k)$ times, thus contributing a
+$\Omega(\ell^3d)$ to the total complexity.
 
 Summing up all the contributions one ends up with the following lower
 bound

@@ -40,9 +40,10 @@ for the case where $p$ is not constant.
 \paragraph{The algorithm C2 and its variants}
 Finally, the algorithm having the best asymptotic complexity in $\ell$
 was proposed again by Couveignes in \cite{Cou96}; we will refer to
-this original version as ``C2''\footnote{As opposed to the algorithm
-  presented in \cite{Cou94}, an algorithm ``C2'' shares many
-  similarities with.}. Its complexity --supposing $p$ is fixed-- was
+this original version as ``C2''\footnote{The reader may wonder why the
+  number 2. We use ``C2'' to distinguish from a previous algorithm
+  --sharing many similarities with ``C2''-- published in
+  \cite{Cou94}.}. Its complexity --supposing $p$ is fixed-- was
 estimated in \cite{Cou96} as being $\tildO(\ell^2\log q)$ operations
 in $\F_p$, but with a precomputation step requiring $\tildO(\ell^3\log
 q)$ operations and large memory requirements. However, some more work
@@ -64,7 +65,7 @@ bound in $\ell^2$ and prove an accurate complexity estimate which
 doesn't suppose $p$ to be fixed. We also run experiments to compare
 the performances of C2 with other algorithms.
 
-\paragraph{Notation and plan}
+\paragraph{Notation}
 In the rest of the paper $p$ is a prime, $d$ a positive integer,
 $q=p^d$ and $\F_q$ is the field with $q$ elements. For an elliptic
 curve $E$ and a field $\K$ embedded in an algebraic closure
@@ -101,6 +102,27 @@ arbitrary field $\K$. The best known algorithm is~\cite{BrKu78}, this
 implies $\ModComp(n)\in O\left(n^{\frac{\omega+1}{2}}\right)$. Note
 that in a boolean RAM model, the algorithm of~\cite{KeUm08} takes
 quasi-linear time.
+
+We borrow some more notation from \cite{DFS09}. Given a tower of
+extensions of finite fields $(\F_q,\U_1,\ldots,\U_k)$, the $i$-th
+\emph{push-down} takes an element in $\U_i$ written on a polynomial
+$\F_p$-basis, and gives the corresponding element on a polynomial
+$\U_{i-1}$ basis. The $i$-th \emph{lift-up} is the inverse
+operation. \cite[Th. 13]{DFS09} shows that the $i$-th push-down
+and lift-up have the same complexity, denoted by ${\sf L}(i)$,
+\[{\sf L}(i) = O\bigl(p^{i+2}d\log_p^2{p^{i+1}d} +
+p\Mult(p^{i+1}d)\bigr) \text{.}\] 
+The $n$-th \emph{pseudotrace} is the
+$\F_q$-linear mapping $\U_i\rightarrow\U_i$ defined as
+\begin{equation*}
+  x\mapsto\sum_{i=0}^{n}x^{q^i}
+  \text{.}
+\end{equation*}
+For any $\U_i$, we denote the complexity of the $n$-th pseudotrace by
+${\sf PT}(i)$, \cite[Th. 20]{DFS09} shows that
+\[{\sf PT}(i) = O\bigl((pi + \log(d))i{\sf L}(i) + p^i\ModComp(pd)\log^2(pd)\bigr)\text{.}\]
+
+
 
 \paragraph{Organisation of the paper}
 In Section~\ref{sec:preliminaries} we give preliminaries on elliptic
