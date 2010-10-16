@@ -1,0 +1,493 @@
+\documentclass[10pt]{beamer}
+
+\usepackage[francais]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{amsthm}
+%\usepackage[all]{xy}
+\usepackage{graphicx}
+%\usepackage{tikz}
+%\usetikzlibrary{trees}
+\usepackage[style=beamer,doi=false,isbn=false,eprint=false,maxnames=10]{biblatex}
+\bibliography{defeo}
+
+%% Stuff
+\renewcommand{\le}{\leqslant}
+\renewcommand{\ge}{\geqslant}  % comme François le demande...
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}  % colouring
+%% Algèbre
+\newcommand{\clot}[1]{\bar{#1}}  % clôture algèbrique
+\newcommand{\card}[1]{\# #1}  % cardinalité d'un ensemble
+\DeclareMathOperator{\car}{char}  % caractéristique d'un corps
+\DeclareMathOperator{\Frac}{Frac}  % corps des fractions
+\newcommand{\Z}{\mathbb{Z}}  % les entiers
+\newcommand{\K}{\mathbb{K}}  % un corps
+\newcommand{\LK}{\mathbb{L}}  % encore un corps
+\newcommand{\U}{\mathbb{U}}  % encore un corps
+\newcommand{\F}{\mathbb{F}}  % un corps fini
+\newcommand{\Q}{\mathbb{Q}}  % les rationnels
+\newcommand{\R}{\mathbb{R}}  % les réels
+\newcommand{\C}{\mathbb{C}}  % les complexes
+\newcommand{\isom}{\cong}  % isomorphisme de corps
+\newcommand{\frob}{\varphi}  % fröbenius
+\DeclareMathOperator{\Gal}{Gal}  % groupe de Galois
+\DeclareMathOperator{\Tr}{Tr}  % trace
+\DeclareMathOperator{\PTr}{PTr}  % pseudotrace
+\DeclareMathOperator{\Norm}{N} % norme
+\newcommand{\euler}{\phi}  % indicatrice d'Euler
+\DeclareMathOperator{\ord}{ord}  % l'ordre d'un élément
+\newcommand{\AS}[1]{\mathcal{#1}}  % la police des polynômes d'AS
+\DeclareMathOperator{\rev}{rev}  % le reverse d'un polynôme
+%% Courbes
+\DeclareMathOperator{\Jac}{Jac}  % la jacobienne
+\newcommand{\Proj}{\mathbb{P}}  % espace projectif
+\newcommand{\0}{\mathcal{O}}  % point de base d'une courbe
+\newcommand{\ecpoint}[3]{[#1:#2:#3]}  % un point d'une courbe
+\newcommand{\isog}[1]{\mathcal{#1}}  % la police des isogénies
+\newcommand{\I}{\isog{I}}  % une isogénie I
+\newcommand{\Hasse}{H}  % l'invariant de Hasse
+\newcommand{\divpol}{f}  % polynôme de division
+%% Autre
+\newcommand{\tildO}{\tilde{O}}  % la notation O~ qui oublie les log
+\newcommand{\Mint}{\mathrm{\sf M}_\text{int}}  % fonction de multiplication
+\newcommand{\Mpol}[1][]{\mathrm{\sf M}_\text{pol}^{#1}}  % fonction de multiplication
+\newcommand{\Mult}[1][]{\mathrm{\sf M}_{#1}}  % fonction de multiplication
+\newcommand{\Push}{\mathrm{\sf P}}  % fonction de push-down
+\newcommand{\Lift}{\mathrm{\sf L}}  % fonction de lift-up
+\newcommand{\Trace}{\mathrm{\sf T}}  % fonction de trace
+\newcommand{\Frob}{\mathrm{\sf F}}  % fonction de frobenius itéré
+\newcommand{\Ptr}{\mathrm{\sf PT}}  % fonction de pseudo-trace
+\newcommand{\ModComp}{\mathrm{\sf C}}  % fonction de composition modulaire
+\newcommand{\alg}[1]{\textsf{#1}}  % la police des algorithmes
+\newcommand{\wrt}{\dashv}  % appartenance forte, a\wrt A signifie que a est représenté comme un élément de A
+\DeclareMathOperator{\op}{op}  % une opération
+
+% beamer-specific
+%\setbeamertemplate{theorem begin}{
+%  \begin{\inserttheoremblockenv}{
+%      Théorème
+%      \ifthenelse{\equal{\inserttheoremaddition}{}}
+%		 {}
+%		 {(\inserttheoremaddition)}    
+		 %  \ifx\inserttheoremaddition\@empty\else\ (\inserttheoremaddition)\fi
+%    }
+%}
+
+\mode<presentation>{%
+  \usetheme[]{Madrid}
+  \usefonttheme[onlymath]{serif}
+  \usecolortheme{crane}
+% \usecolortheme{rose}
+}
+
+
+\title{Calcul rapide d'isogénies en genre $1$}
+\author{Luca~De~Feo}
+\institute[INRIA Saclay]{INRIA Saclay, Projet TANC}
+\date[ENST, Paris, 15 Octobre 2010]{15 Octobre 2010\\Séminaire BAC, ENST, Paris}
+
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Plan}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+%%
+
+\section{Quoi?}
+
+\begin{frame}
+  \frametitle{Isogénies entre courbes elliptiques}
+  
+  \vspace{-2mm}
+
+  {\large \[\I:E\to E'\]}
+  \textbf{Isogénie (separable)}: morphisme rationnel (separable)
+  non-constant préservant le point à l'infini.
+  
+  \begin{block}{Propriétés}
+    \begin{itemize}
+    \item Noyau fini, surjective (dans $\clot{\K}$), 
+    \item définie par des fractions rationnelles avec un pôle à l'infini,
+    \item $\card{E(\F_{q^n})} = \card{E'(\F_{q^n})}$ pour tout $n$,
+    \item Isogénie \emph{duale}: $\;[m] = \I\circ\hat{\I}$.
+    \end{itemize}
+  \end{block}
+
+  \vspace{-1mm}
+
+  \begin{block}{
+	\begin{overprint}
+	\onslide<1> Multiplication	
+	\onslide<2> Endomorphisme de Frobenius
+	\onslide<3> Isogénie separable, degré impair (simplified Weierstrass model)
+	\end{overprint}
+      }
+    \begin{overprint}
+      \onslide<1>
+      \[\begin{aligned}
+	{}[m] : E(\clot{\K}) &\rightarrow E(\clot{\K})\\
+	                   P &\mapsto [m]P
+      \end{aligned}\]
+      $\ker\I = E[m], \quad\deg\I = m^2$.
+
+      \onslide<2>
+      \[\begin{aligned}
+	\frob : E(\clot{\K}) &\rightarrow E(\clot{\K})\\
+	               (X,Y) &\mapsto (X^q,Y^q)
+      \end{aligned}\]
+      $\ker\frob = \{\0\}, \quad\deg\I = q$.
+
+      \onslide<3>
+      \[\quad\I(X,Y) = \left(\frac{g(X)}{h^2(X)},
+      cY\left(\frac{g(X)}{h^2(X)}\right)'\right)\]
+      $\;\ell\;=\;\deg\I\;=\;
+      \card{\ker\I} \;=\; 2\deg h + 1\;$ odd.
+    \end{overprint}
+  \end{block}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{S{\scriptsize choof}E{\scriptsize lkies}A{\scriptsize tkin}}
+
+  \begin{block}{Schoof}
+    \begin{itemize}
+    \item $\card{E(\F_q)} = q + 1 - t\;$ avec $t$ la \emph{trace} du Frobenius:
+      $\frob^2 - [t]\circ\frob + [q] = 0$;
+    \item Calculer $\;t\bmod\ell\;$ pour les premiers $\;\ell<O(\log q)$;
+    \item Équivalent à calculer l'action de $\;\frob\;$ sur $\;E[\ell]\isom\Z/\ell^2\Z$;
+    \item \textbf{En pratique:} calculs modulo le \emph{polynôme de
+        division} (\alert{degré $\sim O(\ell^2)$}).
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Elkies}
+    \begin{itemize}
+    \item Par le théorème de l'isogénie duale $\;[\ell] = \I\circ\hat{\I}$;
+    \item $E[\ell]\;$ contient le sous-groupe $\;\ker\I\isom\Z/\ell\Z$;
+    \item Si $\;\ker\I\;$ est défini sur $\;\K$:
+      \begin{enumerate}
+      \item Trouver la \alert<2>{courbe isogène} $\;E/\ker\I$,
+      \item calculer l'action de  $\;\frob\;$ sur $\;\ker\I$,
+      \item \textbf{En pratique:} calculs modulo le
+        \alert<2>{dénominateur} de l'isogénie (\alert{degré $\sim
+          O(\ell^2)$}).
+      \end{enumerate}
+    \item Marche en moyenne pour la moitié des nombres premiers.
+    \end{itemize}
+  \end{block}
+  
+  Atkin\dots
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Cryptographie moderne}
+  
+  \begin{block}{L'attaque de \cite{gaudry+hess+smart02}}
+    \begin{itemize}
+    \item Calcule une isogénie $\I:E/\F_{q^d}\to H/\F_q\;$ par
+      descente de Weil;
+    \item $H\;$ hyperelliptique de genre $\sim d$: log discret sur
+      $\;H\;$ plus facile pour certains jeux de paramètres.
+    \end{itemize}
+  \end{block}
+
+  \vspace{-1mm}
+
+  \begin{block}{Le cryptosystème de \cite{teske06}}
+    Pas toutes les courbes dans une classe d'isogénie sont vulnérables
+    à GHS, cela permet d'obtenir un cryptosystème \emph{à trappe}:
+    \begin{enumerate}
+    \item Sélectionner $\;E\;$ GHS-vulnérable;
+    \item Obtenir $\;E'\;$ non-GHS-vulnérable par une marche
+      aléatoire dans le graphe d'isogénies;
+    \item Utiliser $\;E'\;$ pour le matériel publique, donner
+      $\;E\;$ à une autorité de confiance.
+    \end{enumerate}
+  \end{block}
+
+  \vspace{-1mm}
+
+  \begin{block}{Autres protocoles utilisant des isogénies}
+    \begin{itemize}
+    \item Le protocole \emph{à la Diffie-Hellman} de \cite{rostovtsev+stolbunov06},
+    \item Fonctions de hachage: \cite{charles+lauter+goren09}.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Quelles entrées, quelles sorties?}
+
+  \begin{block}{Entrées}
+    \begin{enumerate}
+    \item Donnés $E$ et un sous-groupe $H$ de cardinal $\ell$;
+    \item Donnés $E, \ell$;
+    \item Donnés $E, E'$;
+    \item Donnés $E, E', \ell$;
+    \end{enumerate}
+  \end{block}
+
+  \begin{block}{Sorties}
+    \begin{enumerate}
+    \item Existence: dire s'il existe $\I:E\to E'$ (de noyau $H$, ou de degré $\ell$);
+    \item Calculer: des expressions rationnelles en $x$ et $y$ pour $\I$.
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+%%
+%%
+
+\section{Comment?}
+
+%%
+
+\begin{frame}
+  \frametitle{Formules de Vélu}
+  
+  \begin{block}{Formules de Vélu (corps algébriquement clos)}
+    Étant donné le noyau $H$
+    \begin{align*}
+      &\I(\0_E) = \I(\0_{E/H})\\
+      &\begin{aligned}
+        \I(P) = \Biggl( &x(P) + \sum_{Q\in H - \{\0_E\}}x(P+Q) - x(Q) \quad,\\
+        &y(P) + \sum_{Q\in H - \{\0_E\}}y(P+Q) - y(Q) \Biggr) \text{.}
+      \end{aligned}
+    \end{align*}
+  \end{block}
+
+  \begin{block}{Pour $p\ge 3$, étant donné $h(x)$ s'annulant sur $H$}
+    {\footnotesize
+      \[
+      y^2 = f(x)\text{,}
+      \qquad
+      t = \sum_{Q\in G^\ast} f'(Q)\text{,}
+      \quad
+      u = \sum_{Q\in G^\ast} 2f(Q)\text{,}
+      \quad
+      w = u + \sum_{Q\in G^\ast} x(Q)f'(Q)\text{,}\]}
+    \[\alert{\I(x,y) = \left(\frac{g(x)}{h(x)}, y\left(\frac{g(x)}{h(x)}\right)'\right)}
+    \quad\text{avec}\quad
+    \frac{g(x)}{h(x)} = x + t\frac{h'(x)}{h(x)} - u\left(\frac{h'(x)}{h(x)}\right)'\]
+  \end{block}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Polynôme modulaire}
+
+  \begin{center}
+    $\Phi_\ell(X,Y)$, le polynôme minimal sur $\C$ de la fonction
+    modulaire $j(\ell\tau)$
+  \end{center}
+
+  \begin{block}{Propriétés}
+    \begin{itemize}
+    \item Les racines de $\Phi_\ell(X,j(E))$ sont les $j$-invariants
+      des courbes $\ell$-isogènes à $E$;
+    \item Symétrique en $X$ et $Y$, degré $\ell+1$;
+    \item Coefficients entiers de taille $O(\ell)$.
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{En pratique}
+    \begin{itemize}
+    \item On utilise plutôt d'autres invariants modulaires, mais la théorie ne change pas;
+    \item Plusieurs tables de polynômes modulaires précalculés (Enge-Morain, Magma, \dots);
+    \item Calcul en \alert{$\tildO(\ell^3)$} par \cite{sutherland10:modpol};
+    \item et aussi: calcul de $\Phi_\ell \bmod m$ en \alert{$\tildO(\ell^2\log^2m)$}.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{\cite{bostan+morain+salvy+schost08}}
+
+  \begin{center}
+    \Large
+    Donnés $E, E', \ell$, calculer $\I:E\to E'$
+  \end{center}
+
+  Par les formules de Vélu:
+  $\I(x,y) = \left(\frac{g(x)}{h(x)}, y\left(\frac{g(x)}{h(x)}\right)'\right)$,
+  d'où
+  \[(x^3 + ax + b){\left(\frac{g(x)}{h(x)}\right)'}^2 =
+  \left(\frac{g(x)}{h(x)}\right)^3 + a'\frac{g(x)}{h(x)} + b'\]
+  
+  \begin{block}{Algorithme}
+    \begin{enumerate}
+    \item Changement de variables $ S(x) =
+      \sqrt{\frac{h(1/x^2)}{g(1/x^2)}} \quad\Leftrightarrow\quad
+      \frac{g(x)}{h(x)} = \frac{1}{S(1/\sqrt{x})^2}$;
+    \item Solution série de l'équa diff $\;(bx^6 + ax^4 +
+      1){S'}^2 = 1 + a'S^4 + b'S^6$;
+    \item Inverser le changement de variables, reconstruire une
+      fraction rationnelle.
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{SEA}
+
+  Pour tout $\ell\sim\log q$ premier d'Elkies
+  \begin{enumerate}
+  \item Trouver une racine $j'$ de $\;\Phi_\ell(X,j(E))$;
+  \item \alert<2>{En déduire une courbe $\;E'$, $\;\ell$-isogène à $E$};
+  \item Utiliser BMSS pour calculer $\;\I:E\to E'$;
+  \item En déduire $\;t\bmod\ell$.
+  \end{enumerate}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Isogénies canoniques}
+
+  En général pour le modèle de Weierstrass $\I(x,y) =
+  \left(\frac{g(x)}{h(x)},
+    \alert{c}y\left(\frac{g(x)}{h(x)}\right)'\right)$,
+
+  \begin{itemize}
+  \item Quand $c=1$ on dit que le modèles de $E$ et $E'$ sont
+    \emph{canoniques} ou \emph{strictes} ou \emph{normalisés};
+  \item Dans ce cas, on peut appliquer BMSS directement: complexité \alert{$\tildO(\ell)$};
+  \item Sinon il faut passer par le polynôme canonique: complexité \alert{$\tildO(\ell^2)$}.
+  \end{itemize}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Lercier-Sirvent}
+
+  \begin{center}
+    \textbf{Idée:} Lifter dans les $p$-adiques
+
+    \textbf{Problème:} Comment maintenir des modèles normalisés?
+  \end{center}
+
+  \begin{block}{Algorithme}
+    \begin{enumerate}
+    \item Lifter $\Phi_\ell$ dans $\Q_q$;
+    \item Lifter $j$ et $j'$ en maintenant $\tilde{\Phi}_\ell(j,j')=0$;
+    \item Lifter les modèles normalisés;
+    \item Appliquer BMSS dans $\Q_q$.
+    \end{enumerate}
+    Précision $p$-adique requise $O(\log^2\ell)$, complexité totale $\tildO(\ell^2)$.
+  \end{block}
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{SEA revisité}
+  \cite{silverman:elliptic}  
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Les algorithmes de Couveignes}
+  
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{La complexité de Couveignes II}
+  
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Isogénies de degré inconnu}
+  
+\end{frame}
+
+%%
+%%
+
+\section{Et maintenant?}
+
+\begin{frame}
+  \frametitle{Quelques temps d'exécution}
+  
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Marathon d'implantations}
+
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{En quête de la complexité quasi-linéaire}
+  
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Isogénies de degré inconnu}
+  
+\end{frame}
+
+%%
+
+\begin{frame}
+  \frametitle{Z'en voulez plus?}
+  
+\end{frame}
+
+%%
+%%
+
+\begin{frame}[allowframebreaks]
+  \frametitle{References}
+
+  \beamertemplatebookbibitems
+  \printbibliography[type=book]
+  \framebreak
+  \beamertemplatearticlebibitems
+  \printbibliography[nottype=book]
+\end{frame}
+
+\end{document}
+
+
+% Local Variables:
+% mode:flyspell
+% ispell-local-dictionary:"francais"
+% mode:TeX-PDF
+% End:
+%
+
+% LocalWords:  Isogeny abelian isogenies hyperelliptic supersingular Frobenius
+% LocalWords:  isogenous
