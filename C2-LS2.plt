@@ -12,6 +12,7 @@ set rmargin 0
 set lmargin 0
 set size square
 
-plot [2:500][0.015625:65536] 'C2.dat' index 4 using 1:($2+$3+$4+$5+$6+$7+2**floor(log($1)/log(2)+2)*($9+$10)) with line lw 3 title "C2: F_{2^{1023}}",\
-'C2.dat' index 5 using 1:($2+$3+$4+$5+$6+$7+3**floor(log(2*$1+1)/log(3))*($9+$10)/2) with line lw 3 title "C2: F_{3^{650}}",\
-'LS.dat' index 1 using 1:6 with line lw 3 title "LS: F_{5^{439}}"
+plot [2:500][0.015625:131072] 'C2.dat' index 10 using 1:($2+$3+$4+$5+$6+$7+2**floor(log($1)/log(2)+2)*($9+$10)) with line lw 3 title "C2: F_{2^{1023}}",\
+'C2.dat' index 11 using 1:($2+$3+$4+$5+$6+$7+3**floor(log(2*$1+1)/log(3))*($9+$10)/2) with line lw 3 title "C2: F_{3^{650}}",\
+'LS.dat' index 8 using 1:5 with line lw 3 title "LS: F_{3^{650}}",\
+'LS.dat' index 9 using 1:5 with line lw 3 title "LS: F_{5^{439}}"
