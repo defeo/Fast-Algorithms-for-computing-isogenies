@@ -85,6 +85,12 @@
 \institute[INRIA Saclay]{INRIA Saclay, Projet TANC}
 \date[Caen, 21 Octobre 2010]{21 Octobre 2010\\Séminaire Crypto, Université de Caen, Paris}
 
+%%%%%%% This talk originated from the slides for this other talk !
+% \title{Calcul rapide d'isogénies en genre $1$}
+% \author{Luca~De~Feo}
+% \institute[INRIA Saclay]{INRIA Saclay, Projet TANC}
+% \date[ENST, Paris, 15 Octobre 2010]{15 Octobre 2010\\Séminaire BAC, ENST, Paris}
+
 
 \AtBeginSection[]
 {
@@ -129,7 +135,7 @@
 	\begin{overprint}
 	\onslide<1> Multiplication	
 	\onslide<2> Endomorphisme de Frobenius
-	\onslide<3> Isogénie separable, degré impair (simplified Weierstrass model)
+	\onslide<3> Isogénie separable, degré impair (modèle de Weierstrass simplifié)
 	\end{overprint}
       }
     \begin{overprint}
@@ -151,7 +157,7 @@
       \[\quad\I(X,Y) = \left(\frac{g(X)}{h^2(X)},
       cY\left(\frac{g(X)}{h^2(X)}\right)'\right)\]
       $\;\ell\;=\;\deg\I\;=\;
-      \card{\ker\I} \;=\; 2\deg h + 1\;$ odd.
+      \card{\ker\I} \;=\; 2\deg h + 1\;$ impair.
     \end{overprint}
   \end{block}
 \end{frame}
@@ -282,13 +288,13 @@
   \begin{block}{Pour $p\ge 3$, étant donné $h(x)$ s'annulant sur $H$}
     {\footnotesize
       \[
-      y^2 = x^3 + a_2x^2 + a_4x + a_6\text{,}
-      \qquad
-      t = \sum_{Q\in H^\ast} f'(Q)\text{,}
+      y^2 = f(x) = x^3 + a_2x^2 + a_4x + a_6\text{,}
       \quad
-      u = \sum_{Q\in H^\ast} 2f(Q)\text{,}
+      t = \!\!\sum_{Q\in H^\ast} \!\!\!f'(Q)\text{,}
       \quad
-      w = u + \sum_{Q\in H^\ast} x(Q)f'(Q)\text{,}\]}
+      u = \!\!\sum_{Q\in H^\ast} \!\!\!2f(Q)\text{,}
+      \quad
+      w = u + \!\!\sum_{Q\in H^\ast} \!\!\!x(Q)f'(Q)\text{,}\]}
     \[\alert{\I(x,y) = \left(\frac{g(x)}{h(x)}, y\left(\frac{g(x)}{h(x)}\right)'\right)}
     \quad\text{avec}\quad
     \frac{g(x)}{h(x)} = x + t\frac{h'(x)}{h(x)} - u\left(\frac{h'(x)}{h(x)}\right)'\]
@@ -497,7 +503,7 @@
           \emph{point formel} est une série en un paramètre formel
           $\;\tau$;
         \item Fixer une précision \emph{assez grande} pour
-          $\;\F_q[[\tau]]$ ($\sim 4\ell$);
+          $\;\F_q[[\tau]]$ ($\sim\log_p4\ell$);
         \item Calculer un morphisme $\mathcal{U}(\tau) : \mathcal{E}
           \to \mathcal{E}'$;
         \item Reconstruire une fraction rationnelle
@@ -515,7 +521,7 @@
       \begin{itemize}
       \item Calculer itérativement les extensions $\U_i/\F_q$
         t.q. $E[p^i]$ est défini dans $\U_i$;
-      \item Sélectionner un $\;k\;$ \emph{assez grand} ($k\sim 4\ell$);
+      \item Sélectionner un $\;k\;$ \emph{assez grand} ($k\sim\log_p4\ell$);
       \item Calculer $\;P$, générateur de $\;E[p^k]$;
       \item Calculer $\;P'$, générateur de $\;E'[p^k]$;
       \item Calculer le polynôme $\;T\;$ s'annulant sur $\;E[p^k]$;
@@ -592,6 +598,24 @@
 %%
 
 \section{Et maintenant?}
+
+\begin{frame}
+  \frametitle{Quelques temps d'exécution}
+
+  \begin{figure}
+  \centering
+  \includegraphics[height=0.5\textwidth]{../C2-LS}
+   \includegraphics[height=0.5\textwidth]{../C2-LS2}
+   \caption{Comparaison des temps d'exécution de \cite{couveignes96}
+     (C2, seul le temps moyen est dessiné) et \cite{lercier+sirvent08}
+     (LS) sur plusieurs courbes et corps de base. Processeur Intel
+     Xeon E5520 (Nehalem) @2.26GHz. Échelle logarithmique.}
+  \label{fig:comp}
+\end{figure}
+
+\end{frame}
+
+%%
 
 \begin{frame}
   \frametitle{Marathon d'implantations}
