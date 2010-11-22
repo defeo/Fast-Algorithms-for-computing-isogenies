@@ -1,5 +1,5 @@
 set terminal postscript enhanced "Roman" 24
-set term post eps enhanced color  size 9cm,9cm
+set term post eps enhanced color  size 11cm,9cm
 set out "C2-LS.eps"
 
 set logscale y 2
