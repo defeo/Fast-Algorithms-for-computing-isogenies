@@ -478,7 +478,7 @@ l	E[p^k]	F[p^k]	Tree	Interp	ModExp	PreModC	Tries	GCD	ModComp
 397	146.278	147.719	14.5798	66.2259	61.2157	809.643	102	5.88229	23.8617
 
 
-# magma 2.16.11, @rhea (25/01/2011)
+# magma 2.16.11, @rhea (10/02/2011)
 # p=2, d=101
 #       *[p^k]  Tree    ModExp  Interp  Tries   GCD     ModComp
 #
@@ -542,6 +542,7 @@ l	E[p^k]	F[p^k]	Tree	Interp	ModExp	PreModC	Tries	GCD	ModComp
 281	866781	18673.1	5.510	42389.7	940	3.656	5.516	
 283	866828	18546.1	5.480	42023.5	1025	3.669	5.495	# Isogeny not found
 293	858305	18659.0	5.480	42256.9	1025	3.833	5.502	# Isogeny not found
+307	856418	18602.7	5.480	42204.4	249	4.061	5.492
 
 
 # zz_p, @rhea (12/10/2010)
