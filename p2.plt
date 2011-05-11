@@ -6,10 +6,10 @@ set logscale y 2
 set logscale x 2
 #set format y "%.5g"
 set xlabel "isogeny degree"
-set ylabel "seconds" offset 5
+set ylabel "seconds" offset 6
 set key right bottom
 set rmargin 2
-set lmargin 9
+set lmargin 10
 unset bars
 
 plot [][0.01:2000000] 'C2.dat' index 6 using 1:($2+$3+$4+$5+$6+$7+2**floor(log($1)/log(2)+2)*($9+$10)):($2+$3+$4+$5+$6+$7+$9+$10):($2+$3+$4+$5+$6+$7+2**floor(log($1)/log(2)+3)*($9+$10)) with errorlines pt 0 lw 3 title "GF2",\
