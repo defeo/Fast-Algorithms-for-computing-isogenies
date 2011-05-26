@@ -1,0 +1,390 @@
+\documentclass{article}
+
+\usepackage[american]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{mysymbols}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+%\usepackage{tikz}
+%\usetikzlibrary{}
+
+\newcommand{\mf}{\mathfrak}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\title{Notes on complex multiplication}
+\author{Luca De Feo}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+
+\section{Class field theory}
+
+Let $K$ be a number field, we denote by $\0_K$ its \emph{ring of
+  integers}, that is the subring of $K$ made of the numbers that
+satisfy a monic equation with integer coefficients.
+
+\begin{theorem}
+  $\0_K$ is a Dedekind domain. In particular
+  \begin{itemize}
+  \item it is Noetherian,
+  \item it is integrally closed in $K$,
+  \item every non-zero prime ideal is maximal.
+  \end{itemize}
+\end{theorem}
+
+The most important property of Dedekind domains is that any ideal
+$\mf{a}\subset\0_K$ factors in a product of prime ideals
+\begin{equation}
+  \label{eq:4}
+  \mf{a} = \mf{p}_1\cdots\mf{p}_r
+\end{equation}
+and the decomposition is unique up to reordering.
+
+Prime ideals of $\0_K$ are also called the \emph{primes} of $K$.
+
+\begin{definition}[Fractional ideal]
+  A \emph{fractional ideal} is a non-zero finitely generated $\0_K$
+  submodule of $K$.
+\end{definition}
+
+\begin{proposition}
+  Any fractional $\0_K$-ideal $\mf{a}$
+  \begin{itemize}
+  \item is invertible, i.e.\ there exist a fractional ideal $\mf{b}$
+    such that $\mf{a}\mf{b}=\0_K$;
+  \item can be uniquely written as $\mf{a} =
+    \alpha\prod_i^r\mf{p}_i^{r_i}$ with $\alpha\in\K$ and $\mf{p}_i$
+    distinct prime ideals of $\0_K$.
+  \end{itemize}
+\end{proposition}
+
+Hence fractional ideals form a group, denoted by $I_K$. 
+
+\begin{definition}[Ideal class group]
+  A fractional ideal is \emph{principal} if it is of the form
+  $\alpha\0_K$ for some $\alpha\in K$. The principal fractional ideals
+  form a subgroup $P_K\subset I_K$. The \emph{ideal class group}
+  $C(\0_k)$ of $K$ is $P_K/I_K$.
+\end{definition}
+
+Using the \emph{Artin map}, we can prove the following.
+
+\begin{theorem}[Hilbert class field]
+  Given a number field $K$, there is a finite Galois extension $L/K$
+  such that
+  \begin{itemize}
+  \item $L$ is an unramified Abelian extension of $K$,
+  \item any unramified Abelian extension of $K$ lies in $L$,
+  \item there is a canonical isomorphism $\Gal(L/K)\isom C(\0_k)$.
+  \end{itemize}
+  Such an $L$ is called the \emph{Hilbert class field} of $K$.
+\end{theorem}
+
+The degree $[L:K] = \card{C(\0_K)}$ is called the \emph{class number}
+of $K$ and is denoted by $h(\0_K)$.
+
+
+\section{Imaginary quadratic fields}
+
+A quadratic field $K$ can be written as $K=\Q(\sqrt{N})$ where $N$ is
+a squarefree integer; when $N<0$, $K$ is said to be
+\emph{imaginary}. To a quadratic field $K$ is associated a
+\emph{discriminant} $d_K$, which is defined to be
+\begin{equation}
+  \label{eq:1}
+  d_k =
+  \begin{cases}
+    N &\text{if $N=1\bmod 4$,}\\
+    4N & \text{otherwise.}
+  \end{cases}
+\end{equation}
+
+Obviously $K=\Q(\sqrt{d_K})$ and its ring of integers is
+\begin{equation}
+  \label{eq:2}
+  \0_K =
+  \begin{cases}
+    \Z\left[\frac{1+\sqrt{N}}{2}\right] & \text{if $N=1\bmod 4$,}\\
+    \Z[\sqrt{N}] & \text{otherwise.}
+  \end{cases}
+\end{equation}
+This can more conveniently be written
+\begin{equation}
+  \label{eq:3}
+  \0_K = \Z\left[\frac{d_K+\sqrt{d_K}}{2}\right].
+\end{equation}
+
+\begin{definition}[Orders]
+  An \emph{order} $\0$ in a quadratic field $K$ is a subring of $K$
+  that is finitely generated as $\Z$-module and that contains a
+  $\Q$-basis of $K$.
+\end{definition}
+
+In particular $\0\subset\0_K$ and $\0_k$ is also called the
+\emph{maximal order}.
+
+\begin{proposition}[Conductor]
+  Any order $\0$ has finite index in $\0_K$. Its index $f=[\0_k:\0]$
+  is called the \emph{conductor of $\0$} and we have
+  \[\0 = \Z + f\0_K.\]
+\end{proposition}
+
+\begin{definition}[Discriminant]
+  The \emph{discriminant} of an order $\0$ with conductor $f$ is
+  \[D = f^2d_K.\]
+\end{definition}
+
+We can define fractional $\0$-ideals as we did for $\0_K$. These
+ideals need not be invertible, but if we restrict to invertible ones,
+we can define
+
+\begin{definition}[Ideal class group]
+  Let $\0\subset\0_K$ be an order, $I(O)$ the group of invertible
+  fractional $\0$-ideals, and $P(\0)$ the group of principal
+  fractional $\0$-ideals (which are obviously invertible). The
+  \emph{ideal class group} of $\0$ is
+  \[C(\0) = I(\0)/P(\0).\]
+\end{definition}
+
+Every ideal class group $C(\0)$ of an order of $K$ arises as the
+Galois group of an Abelian extension of $K$ ramified at primes above
+the conductor, called the \emph{ring class field} of $\0$.
+
+
+\section{Elliptic functions}
+
+In the meantime, people in complex analysis were trying to solve
+elliptic integrals
+\begin{equation}
+  \label{eq:5}
+  \int\frac{dt}{\sqrt{t(t-1)(t-\lambda)}}.
+\end{equation}
+
+The solutions are better expressed in terms of their inverse
+functions: the elliptic functions.
+
+\begin{definition}[Lattice]
+  A \emph{lattice} $\Lambda\subset\C$ is a discrete additive subgroup
+  of $\C$ that contains a basis of the $\R$-vector space $\C$. Two
+  lattices $\Lambda_1,\Lambda_2$ are said to be \emph{homothetic} if
+  $\Lambda_1=\alpha\Lambda_2$ for some $\alpha\in\C^{\ast}$.
+\end{definition}
+
+As a group, a lattice is isomorphic to $\Z\times\Z$. Two elements
+$\omega_1,\omega_2\in\Lambda$ such that
+\begin{equation}
+  \label{eq:135}
+  \Lambda = \omega_1\Z + \omega_2\Z
+\end{equation}
+are called a \emph{basis} of $\Lambda$. The quotient $\C/\Lambda$ is
+called a \index{complex torus}\emph{complex torus}.
+
+\begin{definition}[Elliptic function]
+  Let $\Lambda$ be a lattice. An \emph{elliptic function} on $\Lambda$
+  is a meromorphic function $f$ on $\C$ such that
+  \begin{equation}
+    \label{eq:141}
+    f(z+\omega) = f(z)
+  \end{equation}
+  for any $\omega\in\Lambda$.  The set of elliptic functions on
+  $\Lambda$ is denoted by $\C(\Lambda)$.
+\end{definition}
+
+An example of elliptic function is the \emph{Weierstrass
+  $\wp$-function}
+\begin{equation}
+  \label{eq:142}
+  \wp(z;\Lambda) = \frac{1}{z^2} + \sum_{\omega\in\Lambda\diffset\{0\}}\frac{1}{(z-\omega)^2}-\frac{1}{\omega^2}
+  \text{.}
+\end{equation}
+\begin{theorem}
+  Let $\Lambda$ be a lattice, then $\C(\Lambda) = \C(\wp(z),\wp'(z))$.
+\end{theorem}
+
+For $k>1$, we define the \emph{Eisenstein series} $G_{2k}$ as
+\begin{equation}
+  \label{eq:143}
+  G_{2k}(\Lambda) = \sum_{\omega\in\Lambda\diffset\{0\}}\frac{1}{\omega^2}
+  \text{.}
+\end{equation}
+
+\begin{theorem}
+  The Laurent series expansion of $\wp(z)$ at $0$ is
+  \begin{equation}
+    \label{eq:144}
+    \wp(z) = \frac{1}{z^2} + \sum_{k=1}^\infty (2k+1)G_{2k+2}z^{2k}
+    \text{.}
+  \end{equation}
+  At any $z\not\in\Lambda$, the function $\wp(z)$ satisfies the
+  differential equation
+  \begin{equation}
+    \label{eq:145}
+    {\wp'}^2 = 4\wp^3 - 60G_4\wp - 140G_6
+    \text{.}
+  \end{equation}
+\end{theorem}
+
+We set $g_2(\Lambda)=60G_4(\Lambda)$ and $g_3(\Lambda)=140G_6(\Lambda)$.
+
+A lattice uniquely determines its Weierstrass function, which in turn
+can be used to express any other elliptic function. Scaling the axes
+does not substantially change the $\wp$-function associated to a
+lattice, and we have
+\begin{equation}
+  \label{eq:6}
+  \wp(\lambda z; \lambda\Lambda) = \lambda^{-2}\wp(z;\Lambda).
+\end{equation}
+
+Thus it is natural to consider lattices up to homothety. The
+$j$-function allows to do such a classification.
+
+\begin{definition}[$j$-invariant]
+  The $j$-invariant $j(\Lambda)$ of $\Lambda$ is
+  \[j(\Lambda) = \frac{g_2(\Lambda)^3}{g_2(\Lambda)^3 - 27g_3(\Lambda)^2}.\]
+\end{definition}
+
+\begin{theorem}
+  $j(\Lambda)=j(\Lambda')$ if and only if $\Lambda$ and $\Lambda'$ are
+  homothetic.
+\end{theorem}
+
+
+\section{Complex multiplication}
+
+It is straightforward to realise that an order $\0$ in an imaginary
+quadratic field $K\subset\C$ is a lattice. More generally, any
+invertible fractional $\0$-ideal can be viewed as a subset of $\C$ and
+thus as a lattice.
+
+If $\mf{a}$ is an invertible $\0$-ideal, we write $j(\mf{a})$ for the
+$j$-invariant of the lattice associated to $\mf{a}$. Since we classify
+lattices up to homothety, it is natural to classify fractional ideals
+up to scaling too: it is then evident that two ideals are homothetic
+if and only if they lie in the same ideal class.
+
+Thus, if $\bar{\mf{a}}\in C(\0)$ is the class of $\mf{a}$,
+$j(\bar{\mf{a}})$ is well-defined and we have that for any given order
+$\0$ of $K$ there is a finite number of $j$-invariants arising from
+it, that is exactly $h(\0)$.
+
+But complex multiplication reaches farther, because it gives an action
+of $C(\0)$ on the $j$-invariants arising from $\0$.
+
+\begin{theorem}[Main theorem of complex multiplication]
+  Let $\0$ be an order in an imaginary quadratic field $K$ and let
+  $\mf{a}$ be an invertible fractional $\0$-ideal. The $j$-invariant
+  $j(\mf{a})$ is an algebraic integer and $K(j(\mf{a}))$ is the ring
+  class field of $\0$.
+\end{theorem}
+
+In particular, all the $j$-invariants arising from $\0$ are conjugate,
+and the class group $C(\0)$ acts faithfully and transitively on them
+(as the Galois group of $K(j(\mf{a}))/K$).
+
+The polynomial
+\begin{equation}
+  \label{eq:7}
+  H_{\0}(X) = \prod_{\bar{\mf{a}}\in C(\0)} \left(X - j(\bar{\mf{a}})\right) \in \Z[X]
+\end{equation}
+is the minimal polynomial of the $j$-invariants arising from $\0$ and
+is called the (Hilbert) class polynomial.
+
+
+\section{Elliptic curves}
+
+\begin{theorem}
+  Let $E$ be the curve 
+  \begin{equation}
+    \label{eq:146}
+    E\;:\: y^2=4x^3-g_2(\Lambda)x-g_3(\Lambda)
+    \text{.}
+  \end{equation}
+  The map
+  \begin{equation}
+    \label{eq:147}
+    \begin{aligned}
+      \phi: \C/\Lambda &\ra E(\C)\\
+      z &\mapsto
+      \begin{cases}
+        \0 &\text{if $z=0$,}\\
+        (\wp(z), \wp'(z)) &\text{otherwise,}
+      \end{cases}
+    \end{aligned}
+  \end{equation}
+  is an isomorphism of Riemann surfaces and a group homomorphism. 
+\end{theorem}
+
+If $\Lambda$ is a lattice, we denote by $E_\Lambda$ the elliptic curve
+corresponding to it as in Eq.~\eqref{eq:146}.
+
+\begin{theorem}
+  Let $\Lambda_1,\Lambda_2$ be lattices and let $a\in\C^\ast$ such that
+  $a\Lambda_1\subset\Lambda_2$. The map
+  \begin{equation}
+    \label{eq:148}
+    \begin{aligned}
+      \phi_a:\C/\Lambda_1&\ra\C/\Lambda_2\\
+      z&\mapsto az
+    \end{aligned}
+  \end{equation}
+  is holomorphic. The map $E_{\Lambda_1}\ra E_{\Lambda_2}$ induced by
+  $\phi_a$ is an isogeny.
+\end{theorem}
+
+The correspondences we just defined are actually equivalences.
+
+\begin{theorem}
+  The category of elliptic curves over $\C$ with isogenies as maps is
+  equivalent to the category of lattices up to homothety with maps
+  $z\mapsto az$ such that $a\Lambda_1\subset\Lambda_2$.
+\end{theorem}
+
+Thus to any elliptic curve there is an unique lattice $\Lambda$
+associated up to homothety; the addition law on $\C/\Lambda$ is just
+addition in $\C$, and an isogeny can be obtained by an $a\in\C$ such
+that $a\Lambda_1\subset\Lambda_2$.
+
+Now, the group law of $E$ defines algebraic endomorphisms $[n]:E\to E$
+for any scalar $n\in\Z$. It is natural to ask whether are other
+algebraic endomorphisms exist. The answer is yes, and when this
+happens we say that $E$ \emph{has complex multiplication}.
+
+\begin{theorem}
+  The endomorphism ring of an elliptic curve over $\C$ is either $\Z$
+  or an order in a quadratic imaginary field. If $\alpha\in\End(E)$ is
+  such an endomorphism, then
+  \begin{itemize}
+  \item $\wp(\alpha z)$ is a rational function in $\wp(z)$,
+  \item $\alpha\Lambda \subset \Lambda$.
+  \end{itemize}
+\end{theorem}
+
+A similar theorem holds for isogenies.
+
+\section{Applications}
+
+\begin{itemize}
+\item Elliptic curves over $\F_q$.
+\item CM method.
+\item Isogeny volcanoes.
+\end{itemize}
+
+
+
+\end{document}
+
+
+% Local Variables:
+% mode:TeX-PDF
+% mode:reftex
+% mode:flyspell
+% ispell-local-dictionary:"british"
+% End:
