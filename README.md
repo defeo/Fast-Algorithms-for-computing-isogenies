@@ -1,7 +1,7 @@
 Fast Algorithms for computing isogenies between ordinary elliptic curves in small characteristic
 ================================================================================================
 
-**Author:** [Luca De Feo](@defeo)
+**Author:** @defeo
 
 **Notice:** this is the author's version of a work that was accepted for publication in Journal of Number Theory.
 Changes resulting from the publishing process, such as peer review, editing, corrections, structural formatting,
